@@ -11,6 +11,7 @@
             "fullscreen": "Full Screen",
             "clear": "Clear",
             "conn": {
+                "sim": "Simulator (virtual device)",
                 "ws": "Connect WebREPL",
                 "ble": "Connect Bluetooth",
                 "usb": "Connect USB/Serial"

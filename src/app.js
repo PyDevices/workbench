@@ -2209,6 +2209,7 @@ export function applyTranslation() {
         QID('py-minify').setAttribute('title',        '[Alt+Shift+M]')
         QID('py-save-compile').setAttribute('title',  `[${metaKey}+Shift+S]`)
         QID('py-disassemble').setAttribute('title',   '[Alt+Shift+D]')
+        QID('btn-conn-sim').setAttribute('title', T('tool.conn.sim'))
         QID('btn-conn-ws').setAttribute('title',  T('tool.conn.ws'))
         QID('btn-conn-ble').setAttribute('title', T('tool.conn.ble'))
         QID('btn-conn-usb').setAttribute('title', T('tool.conn.usb'))

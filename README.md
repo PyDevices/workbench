@@ -21,11 +21,15 @@ sent upstream.
 
 What this fork changes:
 
-- The virtual device is the PyDevices MicroPython WASM build, with a display
-  canvas, touch/keyboard input, and audio (lvgl, pdwidgets, pygraphics,
-  displaydev built in) — *in progress*.
-- PyDevices branding and package index; no analytics (the Amplitude tracking
-  from upstream is removed).
+- The virtual device is the PyDevices MicroPython WASM build (lvgl,
+  pdwidgets, pygraphics and palettes built in; `displaydev`, `board_config`
+  and the rest of `pydevices-desktop` install from mip at boot), reached from
+  its own toolbar button alongside USB/Bluetooth/WebREPL. It gets a real
+  display stage — resolution and shape presets including round watch faces,
+  live resize, audio, pointer and keyboard input — and boots with example
+  programs for each of those libraries already in its file tree.
+- PyDevices branding; no analytics (the Amplitude tracking from upstream is
+  removed).
 
 ## Development
 
@@ -37,6 +41,23 @@ npm run start                # dev server at http://localhost:10001
 
 `python3 build.py` produces the deployable site in `build/`. CI deploys `main`
 to GitHub Pages.
+
+### Testing
+
+```bash
+npm test              # protocol-level suite (test/) - no browser, no hardware
+npm run test:browser  # browser-level suite (test/browser/) - drives the built app
+```
+
+`npm test` exercises `src/rawmode.js`, `src/transports/` and
+`src/package_mgr.js` directly against the stock MicroPython WASM VM; point it
+at real hardware with `VIPER_TEST_TARGET` (see `test/README.md`). It never
+touches the PyDevices runtime. `npm run test:browser` does: it builds on the
+same `build/` output CI deploys and drives it with Playwright — connecting
+the simulator, running every example, resizing, resetting, installing a
+package — so it is what catches PyDevices-runtime regressions the protocol
+suite can't see. Run `python3 build.py --skip-tests` first if `build/` is
+stale.
 
 ## License
 
