@@ -32,6 +32,7 @@
             <button title="Run File [F5]"        onclick="app.runCurrentFile()"  id="btn-run"><i class="fa-solid fa-circle-play" id="btn-run-icon"></i></button>
         </div>
         <div>
+            <button title="Simulator (virtual device)" onclick="app.connectDevice('sim')" id="btn-conn-sim"><i class="fa-solid fa-display"></i></button>
             <button title="Connect WebREPL"      onclick="app.connectDevice('ws')"  id="btn-conn-ws" ><i class="fa-solid fa-link"></i></button>
             <button title="Connect Bluetooth"    onclick="app.connectDevice('ble')" id="btn-conn-ble"><i class="fa-brands fa-bluetooth-b"></i></button>
             <button title="Connect USB/Serial"   onclick="app.connectDevice('usb')" id="btn-conn-usb"><i class="fa-brands fa-usb"></i></button>
@@ -213,6 +214,16 @@
                     <!-- Logs content goes here -->
                 </div>
             </div>
+        </div>
+        <!-- The virtual device's screen. The runtime's canvas bridge finds these
+             by id, so they stay in the page and the stage is revealed when a
+             simulator connects. -->
+        <div id="device-stage">
+            <div class="device-stage-title">Simulator</div>
+            <div class="device-bezel">
+                <canvas id="display_canvas" width="320" height="240" tabindex="0"></canvas>
+            </div>
+            <canvas id="aux_canvas" width="1" height="1" tabindex="0"></canvas>
         </div>
     </div>
     <div id="dpi-ruler" style="position:absolute;height:1in;width:1in;left:-100%;top:-100%;"></div>

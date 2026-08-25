@@ -2,7 +2,9 @@ import globals from "globals"
 import pluginJs from "@eslint/js"
 
 export default [
-  { ignores: ["build/", "src/websocket_relay.cjs", "mcp/"] },
+  // assets/pydevices holds the vendored MicroPython runtime: generated
+  // Emscripten output, not ours to lint.
+  { ignores: ["build/", "src/websocket_relay.cjs", "mcp/", "assets/pydevices/"] },
   { languageOptions: { globals: globals.browser }},
   { files: ["*.mjs"], languageOptions: { globals: globals.node }},
   { files: ["test/**/*.js"], languageOptions: { globals: { ...globals.node, ...globals.mocha }}},

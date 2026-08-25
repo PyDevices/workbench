@@ -10,6 +10,7 @@ import '@xterm/xterm/css/xterm.css'
 import 'toastr/build/toastr.css'
 import './app_common.css'
 import './app.css'
+import './pydevices/stage.css'
 
 import toastr from 'toastr'
 import i18next from 'i18next'
@@ -30,7 +31,9 @@ import { getPkgIndexes, rawInstallPkg, fetchPkgReadme } from './package_mgr.js'
 import { ConnectionUID } from './connection_uid.js'
 import translations from '../build/translations.json'
 import { parseStackTrace, validatePython, disassembleMPY, minifyPython, prettifyPython, compilePython } from './python_utils.js'
-import { createBrowserVM, SYSTEM_DIRS } from './emulator.js'
+import { SYSTEM_DIRS } from './emulator.js'
+import { createPyDevicesVM } from './pydevices/runtime.js'
+import { showDeviceStage, hideDeviceStage, initDeviceStage } from './pydevices/stage.js'
 import { getSetting, onSettingChange, updateSetting } from './settings.js'
 import { renderMarkdown } from './markdown.js'
 
@@ -51,7 +54,7 @@ import { faLink, faBars, faDownload, faCirclePlay, faCircleStop, faFolder, faFil
          faCube, faTools, faSliders, faCircleInfo, faStar, faExpand, faCertificate,
          faPlug, faArrowUpRightFromSquare, faTerminal, faBug, faGaugeHigh,
          faTrashCan, faArrowsRotate, faPowerOff, faPlus, faXmark,
-         faFolderOpen
+         faFolderOpen, faDisplay
        } from '@fortawesome/free-solid-svg-icons'
 import { faMessage, faCircleDown } from '@fortawesome/free-regular-svg-icons'
 
@@ -60,7 +63,7 @@ library.add(faLink, faBars, faDownload, faCirclePlay, faCircleStop, faFolder, fa
          faCube, faTools, faSliders, faCircleInfo, faStar, faExpand, faCertificate,
          faPlug, faArrowUpRightFromSquare, faTerminal, faBug, faGaugeHigh,
          faTrashCan, faArrowsRotate, faPowerOff, faPlus, faXmark,
-         faFolderOpen)
+         faFolderOpen, faDisplay)
 library.add(faMessage, faCircleDown)
 dom.watch()
 
@@ -117,7 +120,7 @@ const portReady = () => !!port && deviceState === 'ready'
  * is answering, and raw mode is held rather than lost.
  */
 function updateDeviceUI() {
-    for (const t of ['ws', 'ble', 'usb']) {
+    for (const t of ['sim', 'ws', 'ble', 'usb']) {
         const btn = QID(`btn-conn-${t}`)
         const mine = (t === connType)
         btn.classList.toggle('connected', mine && (deviceState === 'ready' || isBusyState()))
@@ -185,6 +188,8 @@ function teardownSession() {
        attached gets an honest answer */
     devInfo = null
     connType = null
+    /* A board shows its own screen; there is nothing left to mirror in the tab */
+    hideDeviceStage()
     draftsRestored = false
     sessionInitialized = false
     replMonitor.reset()
@@ -417,11 +422,14 @@ async function prepareNewPort(type) {
             const id = ConnectionUID.parse(url.replace('rtc://', ''))
             new_port = new WebRTCTransport(id.value())
         } else if (url.startsWith('vm://')) {
-            new_port = createBrowserVM()
-            analytics.track('Run MPY VM')
+            new_port = createPyDevicesVM()
         } else {
             toastr.error('Unknown link type')
         }
+    } else if (type === 'sim') {
+        // The PyDevices runtime, running in this tab. No permission to ask for,
+        // no hardware to find - requestAccess below boots the VM.
+        new_port = createPyDevicesVM()
     } else if (type === 'ble') {
         if (iOS) {
             toastr.error('WebBluetooth is not available on iOS')
@@ -499,6 +507,9 @@ export async function connectDevice(type) {
     port = new_port
     connType = type
     wirePort(port)
+
+    /* The virtual device draws into the tab, so give it somewhere to draw */
+    if (type === 'sim') { showDeviceStage() }
 
     analytics.track('Device Port Connected', Object.assign({ connection: type }, await port.getInfo()))
 
@@ -2272,6 +2283,8 @@ function showOfflineReadyToast(version) {
     initLaunchHandler()
     applyTranslation()
 
+
+    initDeviceStage()
 
     setupTabs(QID('side-menu'))
     setupTabs(QID('terminal-container'))

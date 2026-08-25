@@ -78,6 +78,13 @@ function restoreFS(FS, snapshot) {
  * @param {string}   [opts.wasmURL]   - Explicit URL for micropython.wasm (browser)
  * @param {Function} [opts.populateFS] - async (mp) => void, called on first boot to
  *                                       populate the filesystem with example files etc.
+ * @param {Function} [opts.onBoot]     - async (mp) => void, called for every VM, including
+ *                                       the ones a reset creates, once its FS is ready.
+ * @param {Object}   [opts.mpOptions] - Extra loadMicroPython options (heapsize, pystack, ...)
+ * @param {boolean}  [opts.asyncify]  - Feed the REPL through replProcessCharWithAsyncify,
+ *                                      which only builds compiled with ASYNCIFY provide.
+ *                                      It lets the VM yield to the browser mid-call.
+ * @param {string}   [opts.infoType]  - Label reported as the device type
  */
 export class MicroPythonWASM extends Transport {
     constructor(loadMicroPython, opts = {}) {
@@ -85,12 +92,16 @@ export class MicroPythonWASM extends Transport {
         this._loadMicroPython = loadMicroPython
         this._wasmURL = opts.wasmURL || undefined
         this._populateFS = opts.populateFS || null
+        this._onBoot = opts.onBoot || null
+        this._mpOptions = opts.mpOptions || null
+        this._asyncify = !!opts.asyncify
         this.mp = null
         this._inRawMode = false
         this._suppressedOutput = false
         this._fsPopulated = false
         this._decoder = new TextDecoder('utf-8')
-        this.info = { type: 'MicroPython WASM' }
+        this._writeQueue = Promise.resolve()
+        this.info = { type: opts.infoType || 'MicroPython WASM' }
     }
 
     async requestAccess() {
@@ -98,7 +109,7 @@ export class MicroPythonWASM extends Transport {
     }
 
     async _createVM(fsSnapshot = null) {
-        const mpOpts = { linebuffer: false }
+        const mpOpts = Object.assign({ linebuffer: false }, this._mpOptions)
         if (this._wasmURL) mpOpts.url = this._wasmURL
 
         mpOpts.stdout = (data) => {
@@ -110,6 +121,8 @@ export class MicroPythonWASM extends Transport {
             }
             this.activityCallback()
         }
+        // Builds that split stderr out would otherwise drop tracebacks on the floor.
+        mpOpts.stderr = mpOpts.stdout
 
         this.mp = await this._loadMicroPython(mpOpts)
 
@@ -125,12 +138,22 @@ export class MicroPythonWASM extends Transport {
         // Always ensure machine module is present
         try { this.mp.FS.mkdir('/lib') } catch { /* exists */ }
         this.mp.FS.writeFile('/lib/machine.py', MACHINE_MODULE)
+
+        // Interpreter state - sys.path, environment, imports - does not survive
+        // into the fresh VM a reset builds, so this runs for every one of them,
+        // where populateFS only ever runs for the first.
+        if (this._onBoot) {
+            await this._onBoot(this.mp)
+        }
     }
 
     _processInputChar(c) {
-        // NOTE: PyScript variant is not built with ASYNCIFY
-        //return this.mp.replProcessCharWithAsyncify(c)
-
+        // NOTE: PyScript variant is not built with ASYNCIFY, so it only gets the
+        // plain call. Builds that do have it (see opts.asyncify) yield to the
+        // browser inside sleeps and long loops instead of freezing the page.
+        if (this._asyncify) {
+            return this.mp.replProcessCharWithAsyncify(c)
+        }
         return this.mp.replProcessChar(c)
     }
 
@@ -171,7 +194,22 @@ export class MicroPythonWASM extends Transport {
         this.mp = null
     }
 
+    /*
+     * The REPL takes one character at a time, and strictly one at a time: under
+     * ASYNCIFY a call can suspend mid-character, and the runtime rejects a second
+     * one while it is in flight. Terminal keystrokes are written straight to the
+     * port, so they can land in the middle of another write - a Ctrl-D from the
+     * reset button, say - and the interleaved characters reach the parser as
+     * garbage. One queue for the whole VM keeps every write in order.
+     */
     async writeBytes(data) {
+        const done = this._writeQueue.then(() => this._writeBytesNow(data))
+        /* The chain must survive a failed write, or nothing after it would run */
+        this._writeQueue = done.catch(() => {})
+        return done
+    }
+
+    async _writeBytesNow(data) {
         for (let i = 0; i < data.length; i++) {
             const byte = data[i]
 

@@ -1,0 +1,69 @@
+/*
+ * SPDX-FileCopyrightText: 2026 PyDevices
+ * SPDX-License-Identifier: MIT
+ *
+ * The virtual device's screen, sitting to the right of the editor.
+ */
+
+#device-stage {
+    display: none;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background-color: var(--bg-color-menu);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: auto;
+    user-select: none;
+}
+
+#device-stage.visible {
+    display: flex;
+}
+
+.device-stage-title {
+    font-size: 0.8em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.65;
+}
+
+/* Enough of a bezel to read as a panel rather than a stray rectangle */
+.device-bezel {
+    padding: 10px;
+    border-radius: 12px;
+    background: #05070c;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+                0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+#display_canvas {
+    display: block;
+    /* Device pixels stay square and crisp instead of being smoothed */
+    image-rendering: pixelated;
+    background: #000;
+    outline: none;
+    max-width: 100%;
+}
+
+#display_canvas:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent-color);
+}
+
+/* Off-screen scratch surface the runtime composites through */
+#aux_canvas {
+    display: none;
+}
+
+/* On a narrow window the stage would crowd the editor out, so it goes under it */
+@media (max-width: 900px) {
+    #container {
+        flex-wrap: wrap;
+    }
+    #device-stage {
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        width: 100%;
+    }
+}
