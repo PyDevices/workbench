@@ -78,13 +78,16 @@ async function loadPyDevicesMicroPython(mpOpts) {
 function bootScript(width, height) {
     return `
 import os, sys
-sys.path[:] = [".", ".frozen", "lib", "utils"]
+# Absolute /lib, matching a board: the package manager finds the install
+# target by looking for a sys.path entry that ends with "/lib", and a
+# relative "lib" left it refusing to install anything on the simulator.
+sys.path[:] = [".", ".frozen", "/lib", "/utils"]
 try:
-    os.stat("lib/board_config.mpy")
+    os.stat("/lib/board_config.mpy")
 except OSError:
     try:
         import mip
-        mip.install("pydevices-desktop", index=${JSON.stringify(MIP_INDEX)}, target="lib")
+        mip.install("pydevices-desktop", index=${JSON.stringify(MIP_INDEX)}, target="/lib")
     except Exception as exc:
         print("PyDevices libraries unavailable offline:", exc)
 try:
