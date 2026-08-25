@@ -107,19 +107,15 @@ function getDefaultMainPy() {
 # you would on a board, then plug in hardware and run the same code there.
 
 from board_config import display_drv
+from palettes import get_palette
 
 WIDTH, HEIGHT = display_drv.width, display_drv.height
+pal = get_palette()
 
-# Raw RGB565, so this file runs against nothing but the display itself.
-# For named colours: mip.install("pydevices-palettes"), then
-#   from palettes import get_palette
-BLACK, RED, YELLOW, LIME, CYAN, BLUE, MAGENTA = (
-    0x0000, 0xF800, 0xFFE0, 0x07E0, 0x07FF, 0x001F, 0xF81F)
-
-display_drv.fill(BLACK)
+display_drv.fill(pal.BLACK)
 
 # A few bands of colour, so it is obvious the panel is live
-bands = [RED, YELLOW, LIME, CYAN, BLUE, MAGENTA]
+bands = [pal.RED, pal.YELLOW, pal.LIME, pal.CYAN, pal.BLUE, pal.MAGENTA]
 band_h = HEIGHT // (len(bands) + 2)
 top = (HEIGHT - band_h * len(bands)) // 2
 for i, colour in enumerate(bands):
