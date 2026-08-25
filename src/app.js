@@ -501,6 +501,10 @@ export async function connectDevice(type) {
 
     const new_port = await prepareNewPort(type)
     if (!new_port) { return }
+    /* A ?vm=1 link arrives as type 'ws' but hands back the simulator; from
+       here on everything - connType, the stage, audio, the button highlight -
+       should treat it as what it is. */
+    if (new_port.isSimulator) { type = 'sim' }
     // Connect new port
     try {
         await new_port.connect()

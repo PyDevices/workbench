@@ -189,7 +189,7 @@ export function createPyDevicesVM(opts = {}) {
         setBootSize(opts.width, opts.height)
     }
 
-    return new MicroPythonWASM(loadPyDevicesMicroPython, {
+    const port = new MicroPythonWASM(loadPyDevicesMicroPython, {
         wasmURL: runtimeURL('micropython.wasm'),
         infoType: 'PyDevices Simulator',
         // The build is compiled with ASYNCIFY, so the VM can yield to the
@@ -212,4 +212,9 @@ export function createPyDevicesVM(opts = {}) {
             await mp.runPythonAsync(bootScript(bootSize.width, bootSize.height))
         },
     })
+    /* However this port was reached - the toolbar button or a ?vm=1 link that
+       comes in through the WebREPL path - the app treats it as the simulator:
+       the display stage, audio, and the toolbar highlight all key off this. */
+    port.isSimulator = true
+    return port
 }
