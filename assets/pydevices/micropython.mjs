@@ -5861,17 +5861,17 @@ var __emscripten_stack_restore = makeInvalidEarlyAccess('__emscripten_stack_rest
 var __emscripten_stack_alloc = makeInvalidEarlyAccess('__emscripten_stack_alloc');
 var _emscripten_stack_get_current = makeInvalidEarlyAccess('_emscripten_stack_get_current');
 var dynCall_iii = makeInvalidEarlyAccess('dynCall_iii');
+var dynCall_iiii = makeInvalidEarlyAccess('dynCall_iiii');
+var dynCall_iiiiiii = makeInvalidEarlyAccess('dynCall_iiiiiii');
 var dynCall_ii = makeInvalidEarlyAccess('dynCall_ii');
 var dynCall_iiiii = makeInvalidEarlyAccess('dynCall_iiiii');
 var dynCall_viii = makeInvalidEarlyAccess('dynCall_viii');
 var dynCall_iiiiii = makeInvalidEarlyAccess('dynCall_iiiiii');
-var dynCall_iiii = makeInvalidEarlyAccess('dynCall_iiii');
 var dynCall_di = makeInvalidEarlyAccess('dynCall_di');
 var dynCall_vi = makeInvalidEarlyAccess('dynCall_vi');
 var dynCall_vii = makeInvalidEarlyAccess('dynCall_vii');
 var dynCall_viiii = makeInvalidEarlyAccess('dynCall_viiii');
 var dynCall_i = makeInvalidEarlyAccess('dynCall_i');
-var dynCall_iiiiiii = makeInvalidEarlyAccess('dynCall_iiiiiii');
 var dynCall_v = makeInvalidEarlyAccess('dynCall_v');
 var dynCall_jji = makeInvalidEarlyAccess('dynCall_jji');
 var dynCall_viiiii = makeInvalidEarlyAccess('dynCall_viiiii');
@@ -5939,17 +5939,17 @@ function assignWasmExports(wasmExports) {
   assert(typeof wasmExports['_emscripten_stack_alloc'] != 'undefined', 'missing Wasm export: _emscripten_stack_alloc');
   assert(typeof wasmExports['emscripten_stack_get_current'] != 'undefined', 'missing Wasm export: emscripten_stack_get_current');
   assert(typeof wasmExports['dynCall_iii'] != 'undefined', 'missing Wasm export: dynCall_iii');
+  assert(typeof wasmExports['dynCall_iiii'] != 'undefined', 'missing Wasm export: dynCall_iiii');
+  assert(typeof wasmExports['dynCall_iiiiiii'] != 'undefined', 'missing Wasm export: dynCall_iiiiiii');
   assert(typeof wasmExports['dynCall_ii'] != 'undefined', 'missing Wasm export: dynCall_ii');
   assert(typeof wasmExports['dynCall_iiiii'] != 'undefined', 'missing Wasm export: dynCall_iiiii');
   assert(typeof wasmExports['dynCall_viii'] != 'undefined', 'missing Wasm export: dynCall_viii');
   assert(typeof wasmExports['dynCall_iiiiii'] != 'undefined', 'missing Wasm export: dynCall_iiiiii');
-  assert(typeof wasmExports['dynCall_iiii'] != 'undefined', 'missing Wasm export: dynCall_iiii');
   assert(typeof wasmExports['dynCall_di'] != 'undefined', 'missing Wasm export: dynCall_di');
   assert(typeof wasmExports['dynCall_vi'] != 'undefined', 'missing Wasm export: dynCall_vi');
   assert(typeof wasmExports['dynCall_vii'] != 'undefined', 'missing Wasm export: dynCall_vii');
   assert(typeof wasmExports['dynCall_viiii'] != 'undefined', 'missing Wasm export: dynCall_viiii');
   assert(typeof wasmExports['dynCall_i'] != 'undefined', 'missing Wasm export: dynCall_i');
-  assert(typeof wasmExports['dynCall_iiiiiii'] != 'undefined', 'missing Wasm export: dynCall_iiiiiii');
   assert(typeof wasmExports['dynCall_v'] != 'undefined', 'missing Wasm export: dynCall_v');
   assert(typeof wasmExports['dynCall_jji'] != 'undefined', 'missing Wasm export: dynCall_jji');
   assert(typeof wasmExports['dynCall_viiiii'] != 'undefined', 'missing Wasm export: dynCall_viiiii');
@@ -6013,17 +6013,17 @@ function assignWasmExports(wasmExports) {
   __emscripten_stack_alloc = wasmExports['_emscripten_stack_alloc'];
   _emscripten_stack_get_current = wasmExports['emscripten_stack_get_current'];
   dynCall_iii = dynCalls['iii'] = createExportWrapper('dynCall_iii', 3);
+  dynCall_iiii = dynCalls['iiii'] = createExportWrapper('dynCall_iiii', 4);
+  dynCall_iiiiiii = dynCalls['iiiiiii'] = createExportWrapper('dynCall_iiiiiii', 7);
   dynCall_ii = dynCalls['ii'] = createExportWrapper('dynCall_ii', 2);
   dynCall_iiiii = dynCalls['iiiii'] = createExportWrapper('dynCall_iiiii', 5);
   dynCall_viii = dynCalls['viii'] = createExportWrapper('dynCall_viii', 4);
   dynCall_iiiiii = dynCalls['iiiiii'] = createExportWrapper('dynCall_iiiiii', 6);
-  dynCall_iiii = dynCalls['iiii'] = createExportWrapper('dynCall_iiii', 4);
   dynCall_di = dynCalls['di'] = createExportWrapper('dynCall_di', 2);
   dynCall_vi = dynCalls['vi'] = createExportWrapper('dynCall_vi', 2);
   dynCall_vii = dynCalls['vii'] = createExportWrapper('dynCall_vii', 3);
   dynCall_viiii = dynCalls['viiii'] = createExportWrapper('dynCall_viiii', 5);
   dynCall_i = dynCalls['i'] = createExportWrapper('dynCall_i', 1);
-  dynCall_iiiiiii = dynCalls['iiiiiii'] = createExportWrapper('dynCall_iiiiiii', 7);
   dynCall_v = dynCalls['v'] = createExportWrapper('dynCall_v', 1);
   dynCall_jji = dynCalls['jji'] = createExportWrapper('dynCall_jji', 3);
   dynCall_viiiii = dynCalls['viiiii'] = createExportWrapper('dynCall_viiiii', 6);
@@ -7004,9 +7004,20 @@ const py_proxy_handler = {
 class PyProxyThenable {
     constructor(ref) {
         this._ref = ref;
+        this._generation = globalThis.proxy_js_generation;
     }
 
     then(resolve, reject) {
+        if (this._generation !== globalThis.proxy_js_generation) {
+            // The interpreter this generator belonged to is gone; its ref
+            // would resolve to an arbitrary object in the current one.  The
+            // promise machinery calls this spontaneously, so settle the
+            // chain instead of throwing into it.
+            reject(
+                new Error("PyProxyThenable outlived its interpreter"),
+            );
+            return undefined;
+        }
         const values = Module._malloc(3 * 3 * 4);
         proxy_convert_js_to_mp_obj_jsside(resolve, values + 3 * 4);
         proxy_convert_js_to_mp_obj_jsside(reject, values + 2 * 3 * 4);
@@ -7082,6 +7093,15 @@ class PythonError extends Error {
 }
 
 function proxy_js_init() {
+    // Proxy state lives on globalThis and is shared by every interpreter
+    // instance loaded from this module.  Each (re)init starts a new
+    // generation; wrappers handed to the browser (setTimeout callbacks,
+    // event listeners, promise handlers) record the generation they were
+    // created in, so ones that outlive their interpreter go inert instead
+    // of calling into the current interpreter with a recycled index --
+    // which resolves to an arbitrary, unrelated object.
+    globalThis.proxy_js_generation =
+        (globalThis.proxy_js_generation || 0) + 1;
     globalThis.proxy_js_ref = [globalThis, undefined];
     globalThis.proxy_js_ref_next = PROXY_JS_REF_NUM_STATIC;
     globalThis.proxy_js_ref_map = new Map();
@@ -7305,7 +7325,13 @@ function proxy_convert_mp_to_js_obj_jsside(value) {
         // obj
         const id = Module.getValue(value + 4, "i32");
         if (kind === PROXY_KIND_MP_CALLABLE) {
+            const generation = globalThis.proxy_js_generation;
             obj = (...args) => {
+                if (generation !== globalThis.proxy_js_generation) {
+                    // The interpreter this callable belonged to is gone.
+                    // Behave like a cleared timer: do nothing.
+                    return undefined;
+                }
                 return proxy_call_python(id, args);
             };
             obj._ref = id;

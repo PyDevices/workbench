@@ -32,7 +32,7 @@ import { ConnectionUID } from './connection_uid.js'
 import translations from '../build/translations.json'
 import { parseStackTrace, validatePython, disassembleMPY, minifyPython, prettifyPython, compilePython } from './python_utils.js'
 import { SYSTEM_DIRS } from './emulator.js'
-import { createPyDevicesVM, enableSimulatorAudio } from './pydevices/runtime.js'
+import { createPyDevicesVM, enableSimulatorAudio, armSimulatorAudio, disarmSimulatorAudio } from './pydevices/runtime.js'
 import { showDeviceStage, hideDeviceStage, initDeviceStage, onDisplayResize, getDisplayConfig } from './pydevices/stage.js'
 import { getSetting, onSettingChange, updateSetting } from './settings.js'
 import { renderMarkdown } from './markdown.js'
@@ -190,6 +190,7 @@ function teardownSession() {
     connType = null
     /* A board shows its own screen; there is nothing left to mirror in the tab */
     hideDeviceStage()
+    disarmSimulatorAudio()
     draftsRestored = false
     sessionInitialized = false
     replMonitor.reset()
@@ -515,10 +516,11 @@ export async function connectDevice(type) {
     /* The virtual device draws into the tab, so give it somewhere to draw */
     if (type === 'sim') {
         showDeviceStage()
-        /* Ride the connect click through the browser's autoplay gate, so a
-           program that makes a sound simply makes it. Silence is an acceptable
-           outcome; a failed connection is not. */
-        enableSimulatorAudio().catch((err) => console.warn('Audio unavailable:', err))
+        /* Audio cannot be enabled here directly: the runtime's bridge only
+           exists once a program registers a display, and a VM restart replaces
+           it. This watches for each bridge and enables audio as it appears -
+           the connect click already satisfied the browser's autoplay gate. */
+        armSimulatorAudio()
     }
 
     analytics.track('Device Port Connected', Object.assign({ connection: type }, await port.getInfo()))

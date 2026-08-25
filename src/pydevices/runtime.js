@@ -143,6 +143,40 @@ export async function enableSimulatorAudio(microphone = false) {
     return bridge.enableAudio(microphone)
 }
 
+/*
+ * Plain audio cannot be enabled at the moment the simulator connects: the
+ * bridge only comes into existence when a program registers a display, and a
+ * VM restart replaces it (the old one's AudioContext is closed by its
+ * teardown). So instead of enabling once, watch for each new bridge for as
+ * long as the simulator stays connected and enable audio on it as it appears.
+ * The connect click supplied the user activation Chromium wants before an
+ * AudioContext may run.
+ */
+let audioWatch = null
+
+export function armSimulatorAudio() {
+    disarmSimulatorAudio()
+    const watch = { cancelled: false, last: null }
+    audioWatch = watch
+    const tick = () => {
+        if (watch.cancelled) return
+        const bridge = globalThis.Module?.pydevicesBridge
+        if (bridge && bridge !== watch.last) {
+            watch.last = bridge
+            bridge.enableAudio(false).catch((err) => console.warn('Audio unavailable:', err))
+        }
+        setTimeout(tick, 500)
+    }
+    tick()
+}
+
+export function disarmSimulatorAudio() {
+    if (audioWatch) {
+        audioWatch.cancelled = true
+        audioWatch = null
+    }
+}
+
 /**
  * Build the PyDevices virtual device transport.
  *
