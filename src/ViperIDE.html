@@ -88,6 +88,9 @@
                     <div class="title-lines" id="menu-line-pkg-mgr">package manager</div>
                     <div><a href="#" onclick="app.installPkgFromUrl()" id="install-via-url">📦 Install package via link</a></div>
 
+                    <div class="title-lines" id="menu-tools-simulator">simulator</div>
+                    <div><a href="#" onclick="app.enableMicrophone();return false;" id="sim-enable-mic">🎤 Enable microphone</a></div>
+
                     <div class="title-lines" id="menu-tools-python">Python</div>
                     <div><a href="#" onclick="app.pyPrettify()" id="py-prettify">🎀 Prettify current file</a></div>
                     <div><a href="#" onclick="app.pyMinify()" id="py-minify">🤏 Minify current file</a></div>
@@ -219,13 +222,44 @@
              by id, so they stay in the page and the stage is revealed when a
              simulator connects. -->
         <div id="device-stage">
-            <div class="device-stage-title">Simulator</div>
-            <div class="device-bezel">
+            <div class="device-stage-head">
+                <span class="device-stage-title">Simulator</span>
+                <select id="sim-resolution" aria-label="Display size">
+                    <option value="320x240">320 × 240</option>
+                    <option value="240x320">240 × 320</option>
+                    <option value="240x240">240 × 240</option>
+                    <option value="240x240-round">240 × 240 round</option>
+                    <option value="466x466-round">466 × 466 round</option>
+                    <option value="480x320">480 × 320</option>
+                    <option value="320x480">320 × 480</option>
+                    <option value="800x480">800 × 480</option>
+                    <option value="custom">Custom…</option>
+                </select>
+            </div>
+            <div class="device-bezel" id="device-bezel">
                 <canvas id="display_canvas" width="320" height="240" tabindex="0"></canvas>
             </div>
             <canvas id="aux_canvas" width="1" height="1" tabindex="0"></canvas>
         </div>
     </div>
+    <!-- A <dialog> rather than prompt(), which some browsers refuse outright in
+         an installed PWA. -->
+    <dialog id="custom-size-dialog" aria-label="Custom display size">
+        <form id="custom-size-form" method="dialog">
+            <h2>Custom display size</h2>
+            <div class="custom-size-fields">
+                <label>Width <input type="number" id="custom-size-w" min="16" max="2048" step="1" required></label>
+                <label>Height <input type="number" id="custom-size-h" min="16" max="2048" step="1" required></label>
+            </div>
+            <label class="custom-size-round"><input type="checkbox" id="custom-size-round"> Round display</label>
+            <p class="custom-size-hint">The simulator resets to apply a new size.</p>
+            <div class="custom-size-actions">
+                <button type="button" id="custom-size-cancel">Cancel</button>
+                <button type="submit" class="primary">Apply</button>
+            </div>
+        </form>
+    </dialog>
+
     <div id="dpi-ruler" style="position:absolute;height:1in;width:1in;left:-100%;top:-100%;"></div>
 
     <script src="./app.js"></script>

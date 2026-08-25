@@ -22,11 +22,29 @@
     display: flex;
 }
 
+.device-stage-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: space-between;
+}
+
 .device-stage-title {
     font-size: 0.8em;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     opacity: 0.65;
+}
+
+#sim-resolution {
+    background: var(--bg-color-edit);
+    color: var(--fg-color);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 5px;
+    padding: 2px 4px;
+    font-size: 0.85em;
+    font-family: inherit;
 }
 
 /* Enough of a bezel to read as a panel rather than a stray rectangle */
@@ -38,6 +56,12 @@
                 0 6px 18px rgba(0, 0, 0, 0.45);
 }
 
+/* A round panel needs a round bezel, or it reads as a circle in a box */
+.device-bezel.round {
+    border-radius: 50%;
+    padding: 12px;
+}
+
 #display_canvas {
     display: block;
     /* Device pixels stay square and crisp instead of being smoothed */
@@ -47,8 +71,91 @@
     max-width: 100%;
 }
 
+/* Clipped, not resized: the framebuffer stays rectangular, exactly as it is on
+   a round panel, so code that writes to the corners behaves the same here. */
+#display_canvas.round {
+    border-radius: 50%;
+}
+
 #display_canvas:focus-visible {
     box-shadow: 0 0 0 2px var(--accent-color);
+}
+
+#custom-size-dialog {
+    background: var(--bg-color);
+    color: var(--fg-color);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 18px 20px;
+    min-width: 260px;
+}
+
+#custom-size-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+#custom-size-dialog h2 {
+    margin: 0 0 12px;
+    font-size: 1.05em;
+}
+
+.custom-size-fields {
+    display: flex;
+    gap: 12px;
+}
+
+.custom-size-fields label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.9em;
+}
+
+.custom-size-fields input {
+    width: 90px;
+    background: var(--bg-color-edit);
+    color: var(--fg-color);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 5px;
+    padding: 4px 6px;
+    font-family: inherit;
+}
+
+.custom-size-round {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    font-size: 0.9em;
+}
+
+.custom-size-hint {
+    margin: 10px 0 0;
+    font-size: 0.82em;
+    opacity: 0.6;
+}
+
+.custom-size-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.custom-size-actions button {
+    background: var(--bg-color-edit);
+    color: var(--fg-color);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 5px;
+    padding: 5px 14px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.custom-size-actions button.primary {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #fff;
 }
 
 /* Off-screen scratch surface the runtime composites through */

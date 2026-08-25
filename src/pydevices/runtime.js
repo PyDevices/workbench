@@ -23,6 +23,18 @@ export const AUX_CANVAS_ID = 'aux_canvas'
 export const DEFAULT_WIDTH = 320
 export const DEFAULT_HEIGHT = 240
 
+/*
+ * The panel size the next VM will boot with. displaydev reads it from the
+ * environment when board_config builds the display, which happens once per
+ * interpreter - so changing it only takes effect on the next boot, and the
+ * stage resets the VM to apply it.
+ */
+let bootSize = { width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT }
+
+export function setBootSize(width, height) {
+    bootSize = { width, height }
+}
+
 const MIP_INDEX = 'https://PyDevices.github.io/mip'
 
 // The runtime is ~6 MB, so it is fetched on first connect rather than bundled.
@@ -57,13 +69,14 @@ async function loadPyDevicesMicroPython(mpOpts) {
  * than an import, which would build a display as a side effect. The install
  * needs the network; failing it leaves a usable REPL without the PyDevices
  * libraries, and the next connect tries again.
+ *
+ * Order matters: displaydev arrives with the package, so the panel size can only
+ * be set once the install has run. Builds that freeze the libraries in will
+ * satisfy the import either way.
  */
 function bootScript(width, height) {
     return `
 import os, sys
-from displaydev import env_set
-env_set("PYDEVICES_WIDTH", ${Number(width)})
-env_set("PYDEVICES_HEIGHT", ${Number(height)})
 sys.path[:] = [".", ".frozen", "lib", "utils"]
 try:
     os.stat("lib/board_config.mpy")
@@ -73,6 +86,12 @@ except OSError:
         mip.install("pydevices-desktop", index=${JSON.stringify(MIP_INDEX)}, target="lib")
     except Exception as exc:
         print("PyDevices libraries unavailable offline:", exc)
+try:
+    from displaydev import env_set
+    env_set("PYDEVICES_WIDTH", ${Number(width)})
+    env_set("PYDEVICES_HEIGHT", ${Number(height)})
+except ImportError:
+    print("displaydev unavailable - the display will use its own default size")
 os.chdir("/")
 `
 }
@@ -87,15 +106,19 @@ function getDefaultMainPy() {
 # you would on a board, then plug in hardware and run the same code there.
 
 from board_config import display_drv
-from palettes import get_palette
 
 WIDTH, HEIGHT = display_drv.width, display_drv.height
-pal = get_palette()
 
-display_drv.fill(pal.BLACK)
+# Raw RGB565, so this file runs against nothing but the display itself.
+# For named colours: mip.install("pydevices-palettes"), then
+#   from palettes import get_palette
+BLACK, RED, YELLOW, LIME, CYAN, BLUE, MAGENTA = (
+    0x0000, 0xF800, 0xFFE0, 0x07E0, 0x07FF, 0x001F, 0xF81F)
+
+display_drv.fill(BLACK)
 
 # A few bands of colour, so it is obvious the panel is live
-bands = [pal.RED, pal.YELLOW, pal.LIME, pal.CYAN, pal.BLUE, pal.MAGENTA]
+bands = [RED, YELLOW, LIME, CYAN, BLUE, MAGENTA]
 band_h = HEIGHT // (len(bands) + 2)
 top = (HEIGHT - band_h * len(bands)) // 2
 for i, colour in enumerate(bands):
@@ -106,6 +129,23 @@ print("Edit this file and press Run, or type at the REPL below.")
 `
 }
 
+/*
+ * Web Audio will not start without a user gesture, but any gesture on the page
+ * counts - and connecting the simulator is a click - so plain audio needs no
+ * button of its own: it comes up with the device and programs can just make
+ * sound. The microphone is separate on purpose. It raises a permission prompt,
+ * which nobody should get without asking for it, so it stays an explicit action
+ * (Tools -> Enable microphone) rather than part of connecting.
+ *
+ * @param {boolean} microphone - also request microphone access
+ * @returns {Promise<{audio: boolean, microphone: boolean}>}
+ */
+export async function enableSimulatorAudio(microphone = false) {
+    const bridge = globalThis.Module?.pydevicesBridge
+    if (!bridge) throw new Error('The simulator is not running')
+    return bridge.enableAudio(microphone)
+}
+
 /**
  * Build the PyDevices virtual device transport.
  *
@@ -114,8 +154,9 @@ print("Edit this file and press Run, or type at the REPL below.")
  * @param {number} [opts.height] - Display height in pixels
  */
 export function createPyDevicesVM(opts = {}) {
-    const width = opts.width || DEFAULT_WIDTH
-    const height = opts.height || DEFAULT_HEIGHT
+    if (opts.width && opts.height) {
+        setBootSize(opts.width, opts.height)
+    }
 
     return new MicroPythonWASM(loadPyDevicesMicroPython, {
         wasmURL: runtimeURL('micropython.wasm'),
@@ -129,7 +170,9 @@ export function createPyDevicesVM(opts = {}) {
             mp.FS.writeFile('/main.py', getDefaultMainPy())
         },
         async onBoot(mp) {
-            await mp.runPythonAsync(bootScript(width, height))
+            /* Read at boot, not at construction: a resize between resets has to
+               reach the VM that comes back, not the one that went away. */
+            await mp.runPythonAsync(bootScript(bootSize.width, bootSize.height))
         },
     })
 }

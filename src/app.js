@@ -32,8 +32,8 @@ import { ConnectionUID } from './connection_uid.js'
 import translations from '../build/translations.json'
 import { parseStackTrace, validatePython, disassembleMPY, minifyPython, prettifyPython, compilePython } from './python_utils.js'
 import { SYSTEM_DIRS } from './emulator.js'
-import { createPyDevicesVM } from './pydevices/runtime.js'
-import { showDeviceStage, hideDeviceStage, initDeviceStage } from './pydevices/stage.js'
+import { createPyDevicesVM, enableSimulatorAudio } from './pydevices/runtime.js'
+import { showDeviceStage, hideDeviceStage, initDeviceStage, onDisplayResize, getDisplayConfig } from './pydevices/stage.js'
 import { getSetting, onSettingChange, updateSetting } from './settings.js'
 import { renderMarkdown } from './markdown.js'
 
@@ -470,7 +470,11 @@ async function prepareNewPort(type) {
 
     try {
         await new_port.requestAccess()
-    } catch (_err) {
+    } catch (err) {
+        /* Elsewhere this is the user closing a port picker, which is not an
+           error worth reporting. The simulator has no picker to close, so
+           anything thrown here is a genuine failure to start it. */
+        if (type === 'sim') report('Cannot start the simulator', err)
         return
     }
     return new_port
@@ -509,7 +513,13 @@ export async function connectDevice(type) {
     wirePort(port)
 
     /* The virtual device draws into the tab, so give it somewhere to draw */
-    if (type === 'sim') { showDeviceStage() }
+    if (type === 'sim') {
+        showDeviceStage()
+        /* Ride the connect click through the browser's autoplay gate, so a
+           program that makes a sound simply makes it. Silence is an acceptable
+           outcome; a failed connection is not. */
+        enableSimulatorAudio().catch((err) => console.warn('Audio unavailable:', err))
+    }
 
     analytics.track('Device Port Connected', Object.assign({ connection: type }, await port.getInfo()))
 
@@ -1730,6 +1740,27 @@ Connect your device and start creating! 🤖👨‍💻🕹️
     await _loadContent(fn, content, createTab(fn))
 }
 
+/*
+ * Audio comes up with the simulator; the microphone does not, because asking
+ * for it opens a browser permission prompt. This is where someone asks.
+ */
+export async function enableMicrophone() {
+    if (connType !== 'sim' || !port) {
+        toastr.error('Connect the simulator first')
+        return
+    }
+    try {
+        const granted = await enableSimulatorAudio(true)
+        if (granted.microphone) {
+            toastr.success('Microphone enabled')
+        } else {
+            toastr.warning('The browser did not grant microphone access')
+        }
+    } catch (err) {
+        report('Cannot enable microphone', err)
+    }
+}
+
 export function clearTerminal() {
     term.clear()
 }
@@ -2285,6 +2316,16 @@ function showOfflineReadyToast(version) {
 
 
     initDeviceStage()
+    /* board_config builds the display once per interpreter, so a new size only
+       reaches a running simulator through a reset. Nothing to do when the size
+       changes with no simulator attached - the next connect boots with it. */
+    onDisplayResize(() => {
+        if (connType === 'sim' && port) {
+            const { width, height } = getDisplayConfig()
+            toastr.info(`Restarting the simulator at ${width} × ${height}`)
+            reboot('soft')
+        }
+    })
 
     setupTabs(QID('side-menu'))
     setupTabs(QID('terminal-container'))
