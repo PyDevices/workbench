@@ -8,14 +8,14 @@
 
 :root {
     --fg-color: white;
-    --fg-color-highlight: orange;
-    --accent-color: #0a84ff;
-    --bg-color: #2a2e32;
-    --bg-color-menu: #2a2e32ee;
-    --bg-color-edit: #111314;
+    --fg-color-highlight: #ff8a55;
+    --accent-color: #f54e00;
+    --bg-color: #0f172a;
+    --bg-color-menu: #0f172aee;
+    --bg-color-edit: #090d16;
     --font-size: 14px;
-    --connected-passive: #87c244;
-    --connected-active: #0a84ff;
+    --connected-passive: #34d399;
+    --connected-active: #f54e00;
     --connected-color: var(--connected-passive);
     --animation: 0.3s ease-in-out;
 }

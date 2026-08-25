@@ -1,7 +1,7 @@
 {
-  "name": "ViperIDE",
-  "version": "0.6.5",
-  "description": "An innovative MicroPython / CircuitPython IDE for Web and Mobile. Built-in editor, file explorer, REPL, compiler, linter and device connectivity tools for embedded and web projects.",
+  "name": "workbench",
+  "version": "0.1.0",
+  "description": "PyDevices Workbench — a MicroPython IDE for Web and Mobile: built-in device simulator with display, plus USB/Web Serial, Bluetooth and WebREPL connectivity. Built on ViperIDE.",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -11,7 +11,6 @@
     "test": "npx mocha"
   },
   "dependencies": {
-    "@amplitude/analytics-browser": "^2.45.5",
     "@astral-sh/ruff-wasm-web": "0.16.2",
     "@codemirror/lang-json": "^6.0.2",
     "@codemirror/lang-markdown": "^6.5.2",
@@ -30,13 +29,11 @@
     "@xterm/addon-web-links": "^0.12.0",
     "@xterm/xterm": "^6.0.0",
     "codemirror": "^6.0.2",
-    "github-fork-ribbon-css": "^0.2.3",
     "i18next": "^26.3.6",
     "i18next-browser-languagedetector": "^8.2.1",
     "marked": "^18.0.9",
     "peerjs": "^1.5.5",
     "toastr": "^2.1.4",
-    "ua-parser-js": "^2.0.10",
     "web-serial-polyfill": "^1.0.15"
   },
   "devDependencies": {

@@ -44,7 +44,7 @@
             "install-package-source": "تخطّي ترجمة .py → .mpy"
         },
         "about": {
-            "cta": "إذا أعجبك ViperIDE، من فضلك <a id='gh-star'>امنحه نجمة على GitHub</a> ⭐ وانشر الخبر على وسائل التواصل الاجتماعي 📢",
+            "cta": "إذا أعجبك PyDevices Workbench، من فضلك <a id='gh-star'>امنحه نجمة على GitHub</a> ⭐ وانشر الخبر على وسائل التواصل الاجتماعي 📢",
             "report-bug": "يمكنك أيضًا <a id='gh-issues'>الإبلاغ عن خطأ</a> 🐞"
         }
     }

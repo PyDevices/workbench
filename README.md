@@ -1,59 +1,43 @@
-# ViperIDE
+# PyDevices Workbench
 
-[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md) 
-[![GitHub Repo stars](https://img.shields.io/github/stars/vshymanskyy/ViperIDE?style=flat-square&color=green)](https://github.com/vshymanskyy/ViperIDE/stargazers) 
-[![GitHub issues](https://img.shields.io/github/issues-raw/vshymanskyy/ViperIDE?style=flat-square&label=issues&color=green)](https://github.com/vshymanskyy/ViperIDE/issues) 
-[![Build status](https://img.shields.io/github/actions/workflow/status/vshymanskyy/ViperIDE/static.yml?branch=main&style=flat-square&logo=github&label=build)](https://github.com/vshymanskyy/ViperIDE/actions) 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/vshymanskyy/ViperIDE) 
-[![Support vshymanskyy](https://img.shields.io/static/v1?style=flat-square&label=support&message=%E2%9D%A4&color=%23fe8e86)](https://gist.github.com/vshymanskyy/840e6fa41ea6b028b91b333b6e4542ed) 
+**A MicroPython IDE for Web and Mobile — work with a built-in device simulator or a real board, in the same browser tab.**
 
-**An innovative [MicroPython](https://micropython.org) / [CircuitPython](https://circuitpython.org) IDE for Web and Mobile**
+Live at <https://pydevices.github.io/workbench/>.
 
-[![image](docs/images/visual-main.png)](https://viper-ide.org)
+- **Simulator**: a MicroPython WebAssembly virtual device runs entirely in your browser — no hardware needed.
+- **Real boards**: connect over USB (Web Serial / WebUSB), Bluetooth, or WebREPL. File manager, package installer (`mip`), and REPL terminal all work the same on every device.
+- **Editor tooling**: CodeMirror with ruff linting/formatting, `.mpy` cross-compilation, and disassembly — all in-browser.
 
-## Features
+Part of the [PyDevices](https://pydevices.github.io/) project: displays, widgets, and graphics for MicroPython.
 
-- **Lightweight and Accessible**
-  - Runs entirely in your browser - no installation required
-  - Works **offline** on both PC and smartphone
-- **Flexible Connectivity**
-  - Direct USB connection
-  - Wireless/remote options available
-- **Powerful Python Development**
-  - Real-time code analysis: Spot errors and warnings instantly
-  - Integrated Terminal/REPL for interactive coding
-  - Basic code completion
-  - MicroPython Virtual Machine for experimentation
-- **Built-in Management Tools**
-  - File explorer and editor
-  - Package management system
-- ... read more about [features and device support](./docs/Features.md)
+## Built on ViperIDE
 
-## MCP server
+Workbench is a fork of [ViperIDE](https://github.com/vshymanskyy/ViperIDE) by
+[Volodymyr Shymanskyy](https://github.com/vshymanskyy) (MIT license). If you find
+this useful, please star ViperIDE too — the connectivity, file manager, and
+editor tooling come from there. Fork policy: PyDevices-specific code lives in
+new files, diffs to upstream files stay minimal, and generic improvements are
+sent upstream.
 
-[Read More](https://notes.alelec.net/posts/claude-meets-micropython)
+What this fork changes:
 
-## Links
+- The virtual device is the PyDevices MicroPython WASM build, with a display
+  canvas, touch/keyboard input, and audio (lvgl, pdwidgets, pygraphics,
+  displaydev built in) — *in progress*.
+- PyDevices branding and package index; no analytics (the Amplitude tracking
+  from upstream is removed).
 
-[ViperIDE Online](https://viper-ide.org)  
-[Feedback](./docs/Feedback.md)  
-[Documentation](./docs/)  
-[Discussion](https://github.com/orgs/micropython/discussions/15219)  
+## Development
 
-## Used software
+```bash
+npm install
+python3 build.py --prepare   # fetch MicroPython WASM assets
+npm run start                # dev server at http://localhost:10001
+```
 
-- [CodeMirror](https://codemirror.net) - Main code editor, MIT
-- [Ruff](https://docs.astral.sh/ruff) - Python linter and formatter, MIT
-- [Xterm.js](https://xtermjs.org) - REPL Terminal, MIT
-- [PeerJS](https://peerjs.com) - P2P/WebRTC connections, MIT
-- [MicroPython/PyScript](https://www.npmjs.com/package/@micropython/micropython-webassembly-pyscript) - Virtual Machine, MIT
-- [mpy-cross-wasm](https://github.com/vshymanskyy/mpy-cross-wasm) - Code validation and `.mpy` compilation, MIT
-- [mpy-tool](https://github.com/micropython/micropython/blob/master/tools/mpy-tool.py) - MPY bytecode disassembler - MIT
-- [python-minifier](https://github.com/dflook/python-minifier) - Code minifier, MIT
+`python3 build.py` produces the deployable site in `build/`. CI deploys `main`
+to GitHub Pages.
 
-## Forks and derivative projects
+## License
 
-- [Espressif ESP-VISION-IDE](https://ide.vision.espressif.com/) - A low-code [framework and development environment](https://github.com/espressif/esp-vision) for building edge AI and computer-vision applications on Espressif SoCs, with camera capture, image processing, media streaming, model deployment, and AI inference.
-- [Jumperless IDE](https://ide.jumperless.org) - A browser-based MicroPython IDE for [JUMPERLESS breadboards](https://www.crowdsupply.com/architeuthis-flux/jumperless-v5), featuring file and package management, REPL connectivity, firmware flashing, device tools, and OLED bitmap conversion.
-- [Fri3d-IDE](https://fri3dcamp.github.io/Fri3d-IDE/) - A browser-based [ViperIDE fork](https://github.com/Fri3dCamp/Fri3d-IDE) for developing and publishing MicroPython applications for Fri3d Camp badges.
-- [HTLR-MPyRIDE](https://github.com/ArduinoAlvik/HTLR-MPyRIDE) - A customized and extended ViperIDE fork developed for MicroPython education at HTL Rankweil, with a focus on Arduino Alvik and ESP32 devices, browser-based local and remote connectivity, and features adapted for classroom use.
+[MIT](LICENSE), same as ViperIDE.

@@ -44,7 +44,7 @@
             "install-package-source": "Omitir la compilación .py → .mpy"
         },
         "about": {
-            "cta": "Si te gusta ViperIDE, por favor <a id='gh-star'>dale una estrella en GitHub</a> ⭐ y difúndelo en las redes sociales 📢",
+            "cta": "Si te gusta PyDevices Workbench, por favor <a id='gh-star'>dale una estrella en GitHub</a> ⭐ y difúndelo en las redes sociales 📢",
             "report-bug": "También puedes <a id='gh-issues'>reportar un error</a> 🐞"
         }
     }

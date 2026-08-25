@@ -8,7 +8,6 @@
 
 import '@xterm/xterm/css/xterm.css'
 import 'toastr/build/toastr.css'
-import 'github-fork-ribbon-css/gh-fork-ribbon.css'
 import './app_common.css'
 import './app.css'
 
@@ -35,11 +34,8 @@ import { createBrowserVM, SYSTEM_DIRS } from './emulator.js'
 import { getSetting, onSettingChange, updateSetting } from './settings.js'
 import { renderMarkdown } from './markdown.js'
 
-import { UAParser } from 'ua-parser-js'
-import * as amplitude from '@amplitude/analytics-browser'
-
 import { splitPath, joinPath, sleep, fetchJSON, escapeCSS, sizeFmt, report } from './utils.js'
-import { getUserUID, getScreenInfo, IdleMonitor, getCssPropertyValue, QSA, QS, QID, iOS,
+import { getCssPropertyValue, QSA, QS, QID, iOS,
          sanitizeHTML, indicateActivity, setupTabs,
          readDroppedFiles } from './utils_browser.js'
 
@@ -73,15 +69,6 @@ function getBuildDate() {
 }
 
 const T = i18next.t.bind(i18next)
-
-const isLocalhost = (() => {
-    const host = window.location.hostname
-    return host === 'localhost' ||
-           host.endsWith('.localhost') ||
-           host === '127.0.0.1' ||
-           host === '[::1]' ||
-           host === '::1'
-})()
 
 /*
  * Device Management
@@ -1709,27 +1696,24 @@ export async function saveCurrentFile() {
    tab is closed. It has no file behind it on the device, so it is never saved
    and never reconciled against a board. */
 async function openWelcomeTab() {
-    const fn = 'ViperIDE.md'
+    const fn = 'Workbench.md'
     const content = `
-# ViperIDE - MicroPython Web IDE
+# PyDevices Workbench
 
-[![GitHub Repo stars](https://img.shields.io/github/stars/vshymanskyy/ViperIDE?style=flat-square&color=green)](https://github.com/vshymanskyy/ViperIDE/stargazers) 
-[![GitHub issues](https://img.shields.io/github/issues-raw/vshymanskyy/ViperIDE?style=flat-square&label=issues&color=green)](https://github.com/vshymanskyy/ViperIDE/issues) 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/vshymanskyy/ViperIDE) 
-[![Support vshymanskyy](https://img.shields.io/static/v1?style=flat-square&label=support&message=%E2%9D%A4&color=%23fe8e86)](https://gist.github.com/vshymanskyy/840e6fa41ea6b028b91b333b6e4542ed) 
+[![GitHub Repo stars](https://img.shields.io/github/stars/PyDevices/workbench?style=flat-square&color=green)](https://github.com/PyDevices/workbench/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues-raw/PyDevices/workbench?style=flat-square&label=issues&color=green)](https://github.com/PyDevices/workbench/issues)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/PyDevices/workbench)
 
 Connect your device and start creating! 🤖👨‍💻🕹️
 
-> No device?  
+> No device?
 > 👉 Open a [virtual device](${VIPER_IDE_BASE_URL}/?vm=1) and explore some examples.
 
-## More about ViperIDE
+## More
 
-- [README](https://github.com/vshymanskyy/ViperIDE/blob/main/README.md)
-- [Features and device support](https://github.com/vshymanskyy/ViperIDE/blob/main/docs/Features.md)
-- [Documentation](https://github.com/vshymanskyy/ViperIDE/tree/main/docs)
-- [Discussions](https://github.com/orgs/micropython/discussions?discussions_q=ViperIDE)
-- [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md) 
+- [PyDevices](https://pydevices.github.io/) — displays, widgets and graphics for MicroPython
+- [Workbench README](https://github.com/PyDevices/workbench/blob/main/README.md)
+- Built on [ViperIDE](https://github.com/vshymanskyy/ViperIDE) by Volodymyr Shymanskyy — [features](https://github.com/vshymanskyy/ViperIDE/blob/main/docs/Features.md) and [docs](https://github.com/vshymanskyy/ViperIDE/tree/main/docs)
 
 `
     await _loadContent(fn, content, createTab(fn))
@@ -2221,13 +2205,13 @@ export function applyTranslation() {
     }
 
     QSA('a[id=gh-star]').forEach(el => {
-        el.setAttribute('href', 'https://github.com/vshymanskyy/ViperIDE')
+        el.setAttribute('href', 'https://github.com/PyDevices/workbench')
         el.setAttribute('target', '_blank')
         el.classList.add('link')
     })
 
     QSA('a[id=gh-issues]').forEach(el => {
-        el.setAttribute('href', 'https://github.com/vshymanskyy/ViperIDE/issues')
+        el.setAttribute('href', 'https://github.com/PyDevices/workbench/issues')
         el.setAttribute('target', '_blank')
         el.classList.add('link')
     })
@@ -2272,83 +2256,11 @@ function showOfflineReadyToast(version) {
         applyTranslation()
     })
 
-    if (isLocalhost) {
-        window.analytics = {
-            track: function() {},
-            identify: function() {},
-        }
-    } else {
-        amplitude.init('ee23cab1415ee70b31a694db17aebcb8', {
-            autocapture: false
-        })
-
-        window.analytics = {
-            track: (eventName, properties) => amplitude.track(eventName, properties),
-            identify: (userId, traits) => {
-                amplitude.setUserId(userId)
-                if (traits) {
-                    const id = new amplitude.Identify()
-                    for (const [key, value] of Object.entries(traits)) {
-                        id.set(key, value)
-                    }
-                    amplitude.identify(id)
-                }
-            }
-        }
-
-        try {
-            const ua = new UAParser()
-            const scr = getScreenInfo()
-
-            let tz
-            try {
-                tz = Intl.DateTimeFormat().resolvedOptions().timeZone
-            } catch (_e) {
-                tz = (new Date()).getTimezoneOffset()
-            }
-
-            const userUID = getUserUID()
-
-            analytics.identify(userUID, {
-                version: VIPER_IDE_VERSION,
-                build: getBuildDate(),
-                browser: ua.getBrowser().name,
-                browser_version: ua.getBrowser().version,
-                os: ua.getOS().name,
-                os_version: ua.getOS().version,
-                cpu: ua.getCPU().architecture,
-                pwa: isStandalonePWA(),
-                screen: scr.width + 'x' + scr.height,
-                orientation: scr.orientation,
-                dpr: scr.dpr,
-                dpi: QID('dpi-ruler').offsetHeight,
-                lang: currentLang,
-                //location: geo.latitude + ',' + geo.longitude,
-                //continent: geo.continent,
-                //country: geo.countryName,
-                //region: geo.regionName,
-                //city: geo.cityName,
-                tz: tz,
-            })
-
-            analytics.track('Visit', {
-                url: window.location.href,
-                referrer: document.referrer,
-            })
-
-            const idleMonitor = new IdleMonitor(3*60*1000)
-
-            idleMonitor.setIdleCallback(() => {
-                analytics.track('User Idle')
-            })
-
-            idleMonitor.setActiveCallback(() => {
-                analytics.track('User Active')
-            })
-
-        } catch (_err) {
-            // analytics user enrichment failed; base tracking via amplitude still active
-        }
+    // PyDevices Workbench collects no analytics. Upstream call sites are kept
+    // working through this stub so merges from ViperIDE stay small.
+    window.analytics = {
+        track: function() {},
+        identify: function() {},
     }
 
     onSettingChange('zoom', function(newValue) {
@@ -2601,7 +2513,7 @@ async function checkForUpdates() {
         return
     }
     if (current_version.localeCompare(manifest.version, undefined, {numeric: true, sensitivity: "base"}) < 0) {
-        toastr.info("New version available.<br/>Refresh the page to update.", `ViperIDE ${manifest.version}`)
+        toastr.info("New version available.<br/>Refresh the page to update.", `Workbench ${manifest.version}`)
         QID('viper-ide-version').innerHTML = `${current_version} (<a href="javascript:app.updateApp()">update</a>)`
 
         // Automatically show about page

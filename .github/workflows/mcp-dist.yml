@@ -17,7 +17,7 @@ jobs:
   build-viperide:
     runs-on: ubuntu-latest
     env:
-      VIPER_IDE_BASE_URL: https://viper-ide.org
+      VIPER_IDE_BASE_URL: https://pydevices.github.io/workbench
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
