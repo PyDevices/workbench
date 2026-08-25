@@ -142,7 +142,11 @@ print("Edit this file and press Run, or type at the REPL below.")
  */
 export async function enableSimulatorAudio(microphone = false) {
     const bridge = globalThis.Module?.pydevicesBridge
-    if (!bridge) throw new Error('The simulator is not running')
+    // The bridge is created by the runtime's first display registration, not
+    // by connecting - a simulator sitting at an idle prompt with nothing run
+    // yet has none, and "not running" would be the wrong thing to tell
+    // someone about a VM they are actively connected to.
+    if (!bridge) throw new Error('Run a program first - audio needs a display to be registered')
     return bridge.enableAudio(microphone)
 }
 

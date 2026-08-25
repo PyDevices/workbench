@@ -18,6 +18,18 @@ test('audio enables itself once a program registers a display', async ({ page })
         .toBe(true)
 })
 
+test('enabling the microphone before anything has run gives an actionable error', async ({ page }) => {
+    await connectSimulator(page)
+    // Nothing has run, so the bridge does not exist yet. enableMicrophone()
+    // reports its own errors rather than throwing, so the toast is the
+    // observable result - it used to read "The simulator is not running",
+    // which is wrong (it is) and unhelpful (it doesn't say what to do).
+    await page.evaluate(() => window.app.enableMicrophone())
+    const toast = page.locator('#toast-container')
+    await expect(toast).toContainText('Run a program first', { timeout: 5_000 })
+    await expect(toast).not.toContainText('not running')
+})
+
 test('audio re-enables on the new bridge after a reset', async ({ page }) => {
     await connectSimulator(page)
     await runFile(page, '00_touch_paint.py')
