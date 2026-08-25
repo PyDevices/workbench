@@ -1731,10 +1731,29 @@ async function openWelcomeTab() {
 [![GitHub issues](https://img.shields.io/github/issues-raw/PyDevices/workbench?style=flat-square&label=issues&color=green)](https://github.com/PyDevices/workbench/issues)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/PyDevices/workbench)
 
-Connect your device and start creating! 🤖👨‍💻🕹️
+A MicroPython device workbench for [PyDevices](https://pydevices.github.io/):
+displays, widgets and graphics, in the browser or on real hardware.
 
-> No device?
-> 👉 Open a [virtual device](${VIPER_IDE_BASE_URL}/?vm=1) and explore some examples.
+## No board? Start with the simulator
+
+Click **Simulator** in the toolbar above. It boots a real display and file
+system right in this tab - no install, no wiring. The file tree opens with
+six ready-to-run examples covering the display, touch and each PyDevices
+library:
+
+- \`00_touch_paint.py\` - a paint program you drag on with the mouse or a finger
+- \`01_lvgl_counter.py\`, \`02_lvgl_thermostat.py\` - LVGL widgets and a round watch face
+- \`03_pdwidgets_dashboard.py\` - a pdwidgets sensor panel with sliders and switches
+- \`04_pygraphics_shapes.py\`, \`05_displaydev_raw.py\` - the lower-level graphics APIs
+
+Open one, press **Run**, and edit it while it's running - the same code runs
+unchanged on a board.
+
+## Got a board? Connect it
+
+USB, Bluetooth, or WebREPL - the buttons next to Simulator. Same editor,
+same file manager, same REPL either way; switching devices is just a
+different button.
 
 ## More
 
