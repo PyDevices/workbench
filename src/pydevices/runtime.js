@@ -12,6 +12,7 @@
  */
 
 import { MicroPythonWASM, SYSTEM_DIRS } from '../transports/vm.js'
+import { loadVFS } from '../python_utils.js'
 
 export { SYSTEM_DIRS }
 
@@ -166,8 +167,14 @@ export function createPyDevicesVM(opts = {}) {
         asyncify: true,
         // lvgl and framebuffers need considerably more room than the 1 MB default.
         mpOptions: { heapsize: 16 * 1024 * 1024 },
-        populateFS(mp) {
+        async populateFS(mp) {
             mp.FS.writeFile('/main.py', getDefaultMainPy())
+            /* The example programs, shipped as a tarball built from src/vm_vfs */
+            try {
+                await loadVFS(mp, new URL('assets/vm_vfs.tar.gz', document.baseURI).href)
+            } catch (err) {
+                console.warn('Examples unavailable:', err)
+            }
         },
         async onBoot(mp) {
             /* Read at boot, not at construction: a resize between resets has to
