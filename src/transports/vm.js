@@ -164,6 +164,19 @@ export class MicroPythonWASM extends Transport {
     async _restart() {
         const wasRaw = this._inRawMode
 
+        /*
+         * A build that paints or listens from the host side keeps that work in
+         * the page, not in the interpreter: an animation frame, DOM listeners,
+         * timers. They outlive the VM they belong to and then call into memory
+         * that is gone, which takes the tab with it. Ask the runtime to let go
+         * of them first, on builds that offer a way to.
+         */
+        try {
+            globalThis.Module?.pydevicesBridge?.shutdown?.()
+        } catch (err) {
+            console.warn('Runtime teardown failed:', err)
+        }
+
         const snapshot = snapshotFS(this.mp.FS)
         this._suppressedOutput = true
 
