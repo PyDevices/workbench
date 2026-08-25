@@ -189,7 +189,15 @@ export class MpRawMode {
                 await this.port.readUntil(RAW_REPL_BANNER)
             }
 
+            let ended = false
             this.end = async () => {
+                /* Idempotent: some callers hold a session past where another
+                   caller already closed it, and a second Ctrl-B would not just
+                   double the banner - the mutex below is already released after
+                   the first call, so it would write completely unguarded,
+                   free to land in the middle of whatever transaction runs next. */
+                if (ended) return
+                ended = true
                 try {
                     await this.port.write('\x02')     // Ctrl-B: exit raw REPL
                     await this.port.readUntil('>\r\n')

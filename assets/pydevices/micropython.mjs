@@ -4543,8 +4543,20 @@ var findStringEnd = (heapOrArray, idx, maxBytesToRead, ignoreNul) => {
           canvas.__pydevicesInputInstalled = true;
           canvas.tabIndex = canvas.tabIndex >= 0 ? canvas.tabIndex : 0;
           const modifiers = (e) => ({altKey:e.altKey, ctrlKey:e.ctrlKey, metaKey:e.metaKey, shiftKey:e.shiftKey});
+          // Named and tracked on the element (rather than anonymous closures) so a
+          // future register on this same canvas - a new WASM instance after a VM
+          // restart, most likely - can strip them via pydevices_release_canvas
+          // before installing its own. Without that, events from a second
+          // instance would keep calling into the first instance's closures - and
+          // with them, its whole WASM heap - forever.
+          const listeners = [];
+          const on = (name, handler, opts) => {
+              canvas.addEventListener(name, handler, opts);
+              listeners.push([name, handler, opts]);
+          };
+          canvas.__pydevicesListeners = listeners;
           for (const name of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel']) {
-              canvas.addEventListener(name, (e) => {
+              on(name, (e) => {
                   const p = pydevices_relative_point(canvas, e);
                   pydevices_push_event(canvasId, Object.assign({type:name, x:p.x, y:p.y, movementX:e.movementX||0, movementY:e.movementY||0, button:e.button, buttons:e.buttons, pressure:e.pressure, pointerId:e.pointerId, pointerType:e.pointerType, primary:e.isPrimary}, modifiers(e)));
                   if (name === 'pointerdown') {
@@ -4554,19 +4566,19 @@ var findStringEnd = (heapOrArray, idx, maxBytesToRead, ignoreNul) => {
                   e.preventDefault();
               });
           }
-          canvas.addEventListener('wheel', (e) => {
+          on('wheel', (e) => {
               const p = pydevices_relative_point(canvas, e);
               pydevices_push_event(canvasId, Object.assign({type:'wheel', x:p.x, y:p.y, deltaX:e.deltaX, deltaY:e.deltaY, deltaZ:e.deltaZ, deltaMode:e.deltaMode}, modifiers(e)));
               e.preventDefault();
           }, {passive:false});
           for (const name of ['keydown', 'keyup']) {
-              canvas.addEventListener(name, (e) => {
+              on(name, (e) => {
                   pydevices_push_event(canvasId, Object.assign({type:name, key:e.key, code:e.code, repeat:e.repeat, location:e.location}, modifiers(e)));
                   if (e.key === 'Backspace' || e.key === 'Escape' || e.key === 'BrowserBack') e.preventDefault();
               });
           }
-          canvas.addEventListener('focus', () => pydevices_push_event(canvasId, {type:'focus'}));
-          canvas.addEventListener('blur', () => pydevices_push_event(canvasId, {type:'blur'}));
+          on('focus', () => pydevices_push_event(canvasId, {type:'focus'}));
+          on('blur', () => pydevices_push_event(canvasId, {type:'blur'}));
           canvas.focus();
       };
 
@@ -4602,9 +4614,65 @@ var findStringEnd = (heapOrArray, idx, maxBytesToRead, ignoreNul) => {
           state.animation = requestAnimationFrame(pydevices_paint);
       };
 
+
+  var pydevices_release_canvas = (canvas) => {
+          for (const [name, handler, opts] of canvas.__pydevicesListeners || []) {
+              canvas.removeEventListener(name, handler, opts);
+          }
+          canvas.__pydevicesListeners = null;
+          canvas.__pydevicesInputInstalled = false;
+      };
   var pydevices_export_host = () => {
           if (Module.pydevicesBridge) return;
           Module.pydevicesBridge = {
+              /*
+             * Releases everything this instance holds in the host page: the
+             * paint loop, the canvas listeners, pending timers, and any audio
+             * still playing or recording. Meant to run right before an embedder
+             * discards this Module for a fresh one - a VM restart, most likely -
+             * so the old instance's WASM heap (kept alive otherwise by nothing
+             * but its own rAF callback and DOM listeners) actually becomes
+             * garbage instead of accumulating on every restart, and so canvas
+             * input reaches whichever instance registers on it next rather than
+             * silently continuing to reach this one.
+             *
+             * Idempotent - calling it twice, or on an instance that never
+             * registered a display, does nothing harmful.
+             */
+              shutdown: () => {
+                  const state = pydevices_state;
+                  if (state.animation) {
+                      cancelAnimationFrame(state.animation);
+                      state.animation = 0;
+                  }
+                  for (const display of state.displays.values()) {
+                      if (display.canvas) pydevices_release_canvas(display.canvas);
+                  }
+                  state.displays.clear();
+                  for (const timer of state.timers.values()) {
+                      timer.periodic ? clearInterval(timer.handle) : clearTimeout(timer.handle);
+                  }
+                  state.timers.clear();
+                  state.firedTimers.length = 0;
+                  for (const source of state.audioSources) {
+                      try { source.stop(); } catch (_) { /* already finished */ }
+                  }
+                  state.audioSources.clear();
+                  state.audioQueuedBytes = 0;
+                  state.inputFrames.length = 0;
+                  if (state.processor) { try { state.processor.disconnect(); } catch (_) {} }
+                  if (state.mediaNode) { try { state.mediaNode.disconnect(); } catch (_) {} }
+                  if (state.mediaStream) { for (const track of state.mediaStream.getTracks()) track.stop(); }
+                  state.processor = null;
+                  state.mediaNode = null;
+                  state.mediaStream = null;
+                  state.microphoneEnabled = false;
+                  if (state.audioContext) {
+                      try { state.audioContext.close(); } catch (_) {}
+                      state.audioContext = null;
+                  }
+                  state.audioEnabled = false;
+              },
               enableAudio: async (microphone=false) => {
                   const state = pydevices_state;
                   const AudioContext = globalThis.AudioContext || globalThis.webkitAudioContext;
@@ -4698,8 +4766,16 @@ var findStringEnd = (heapOrArray, idx, maxBytesToRead, ignoreNul) => {
           pydevices_get_display(UTF8ToString(canvasPtr)).eventRing = ptr ? {ptr,capacity,stride} : null;
       };
 
+
   var _pydevices_host_reset = () => {
           const state = pydevices_state;
+          if (state.animation) {
+              cancelAnimationFrame(state.animation);
+              state.animation = 0;
+          }
+          for (const display of state.displays.values()) {
+              if (display.canvas) pydevices_release_canvas(display.canvas);
+          }
           state.displays.clear();
           state.firedTimers.length = 0;
           for (const timer of state.timers.values()) {
@@ -5694,6 +5770,7 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'pydevices_push_event',
   'pydevices_relative_point',
   'pydevices_install_input',
+  'pydevices_release_canvas',
   'pydevices_paint',
   'pydevices_export_host',
   'pydevices_decode_pcm',
