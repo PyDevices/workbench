@@ -2223,7 +2223,7 @@ let offlineReadyToastShown = false
 function showOfflineReadyToast(version) {
     if (offlineReadyToastShown) return
     offlineReadyToastShown = true
-    toastr.success(`ViperIDE ${version} can now be opened and used even if your device is offline or in airplane mode`, "Ready to be used offline")
+    toastr.success(`Workbench ${version} can now be opened and used even if your device is offline or in airplane mode`, "Ready to be used offline")
 }
 
 (async () => {

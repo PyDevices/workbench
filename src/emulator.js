@@ -16,8 +16,8 @@ export { MicroPythonWASM, SYSTEM_DIRS }
 const T = i18next.t.bind(i18next)
 
 function getDefaultMainPy() { return `\
-# ViperIDE - MicroPython Web IDE
-# Read more: https://github.com/vshymanskyy/ViperIDE
+# PyDevices Workbench - MicroPython device workbench
+# Read more: https://github.com/PyDevices/workbench
 
 # This is a MicroPython virtual machine, running directly in your browser using WebAssembly.
 #
