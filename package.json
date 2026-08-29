@@ -1,6 +1,6 @@
 {
   "name": "workbench",
-  "version": "0.1.0",
+  "version": "0.7.0",
   "description": "PyDevices Workbench — a MicroPython IDE for Web and Mobile: built-in device simulator with display, plus USB/Web Serial, Bluetooth and WebREPL connectivity. Built on ViperIDE.",
   "main": "index.js",
   "type": "module",
