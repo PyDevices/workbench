@@ -1,0 +1,44 @@
+# Gate-1 decision: plain vX.Y.Z tags are the release trigger for the app
+# (the mcp-v* flow remains, but only for the MCP tool's npm artifact).
+# Builds the full app and attaches the deployable bundle to the Release.
+name: Release
+
+on:
+  push:
+    tags: ['v[0-9]*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing vX.Y.Z tag to (re)release (catch-up)
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build the app
+        run: |
+          npm ci
+          python3 build.py --skip-tests
+      - name: Bundle and release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          (cd build && zip -qr "../workbench-$TAG.zip" .)
+          gh release view "$TAG" >/dev/null 2>&1 || \
+            gh release create "$TAG" --title "$TAG" --generate-notes
+          gh release upload "$TAG" "workbench-$TAG.zip" --clobber
