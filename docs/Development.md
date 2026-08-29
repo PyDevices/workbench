@@ -1,6 +1,7 @@
-# ViperIDE Development
+# Workbench Development
 
-This guide covers the common local development workflow for ViperIDE.
+This guide covers the common local development workflow for Workbench, a
+fork of [ViperIDE](https://github.com/vshymanskyy/ViperIDE).
 
 ## Prerequisites
 
@@ -21,18 +22,18 @@ npm install --include=dev
 | `assets/` | Icons and images copied into the production build |
 | `docs/` | User and contributor documentation |
 | `packages/viper-tools/` | MicroPython helper package metadata and files |
-| `mcp/` | MCP server for controlling ViperIDE from an AI client |
+| `mcp/` | MCP server for controlling Workbench from an AI client |
 | `build.py` | Production build script used by GitHub Pages deployment |
 | `rollup.config.mjs` | Rollup bundle configuration |
 
 ## Base URL
 
-ViperIDE loads its WebAssembly runtimes, virtual filesystem archives and `manifest.json` over absolute URLs, so the origin it is served from has to be baked into the bundle. It is substituted at build time from the `VIPER_IDE_BASE_URL` environment variable:
+Workbench loads its WebAssembly runtimes, virtual filesystem archives and `manifest.json` over absolute URLs, so the origin it is served from has to be baked into the bundle. It is substituted at build time from the `VIPER_IDE_BASE_URL` environment variable (the name is unchanged from upstream ViperIDE):
 
 - In JavaScript, as the `VIPER_IDE_BASE_URL` constant (replaced by Rollup)
 - In HTML, as the `${VIPER_IDE_BASE_URL}` placeholder (replaced while copying the files into `build/`)
 
-`build.py` defaults it to `http://localhost:10001` and passes it on to Rollup. CI workflows set `VIPER_IDE_BASE_URL=https://viper-ide.org` explicitly for production builds.
+`build.py` defaults it to `http://localhost:10001` and passes it on to Rollup. The `static.yml` and `release.yml` CI workflows both set `VIPER_IDE_BASE_URL=https://pydevices.github.io/workbench` explicitly for production builds (`static.yml` for the GitHub Pages deploy on every push to `main`, `release.yml` for the bundle attached to a tagged release).
 
 **To override it manually, set `VIPER_IDE_BASE_URL`:**
 
@@ -53,7 +54,7 @@ The development server is provided by Rollup watch mode. It serves the `build/` 
 Run the full build from the repository root:
 
 ```sh
-python3 build.py
+python3 build.py --skip-tests
 ```
 
 The script:
@@ -65,12 +66,29 @@ The script:
 - Resolves the base URL from `VIPER_IDE_BASE_URL`, defaulting to `http://localhost:10001`
 - Vendors `python-minifier` from PyPI into `src/tools_vfs/lib/python_minifier`
 - Builds reproducible virtual filesystem archives into `build/assets/`
-- Runs ESLint
+- Runs `npm install` if `node_modules` is missing
+- Unless `--skip-tests` is passed, runs ESLint (`npm run lint`) and the mocha
+  protocol-level test suite (`npm run test`)
 - Runs the Rollup build
 - Inlines generated CSS and JavaScript into the HTML files
-- Copies WebAssembly runtime assets into `build/assets/`
+- Copies WebAssembly runtime assets (`micropython.wasm`, the `mpy-cross-*.wasm`
+  binaries, `ruff_wasm_bg.wasm`) into `build/assets/`
 
-The generated site is in `build/`.
+The generated site, including those WebAssembly assets, is in `build/`.
+
+Two flags change this behavior:
+
+- `--prepare` stops right after vendoring dependencies (the `npm install`,
+  `python-minifier`, and virtual filesystem tarball steps) — it does **not**
+  run lint/tests, the Rollup build, or copy the WASM assets. It exists so
+  other tooling (e.g. `npm test` on its own) has what it needs without paying
+  for a full build; it does not produce a servable `build/`.
+- `--skip-tests` runs the full build but skips the `npm run lint` and
+  `npm run test` steps.
+
+`npm run start` (Rollup watch mode) serves whatever is already in `build/`,
+so run `python3 build.py --skip-tests` (or plain `python3 build.py`) at least
+once first.
 
 Start the watcher:
 
@@ -112,29 +130,36 @@ cd mcp
 npm install
 ```
 
-For development, build ViperIDE first, then run the MCP server:
+For development, build Workbench first, then run the MCP server:
 
 ```sh
 cd ..
-python3 build.py
+python3 build.py --skip-tests
 cd mcp
 npm start
 ```
 
-The server serves the built ViperIDE, opens a browser window, and exposes MCP tools for IDE, terminal, file, package, and device operations.
+The server serves the built app, opens a browser window, and exposes MCP tools for IDE, terminal, file, package, and device operations.
 
 ## Release Notes
 
-GitHub Pages deployment builds the static site with:
+Workbench has two independent release tracks (see `.github/workflows/`):
 
-```sh
-python3 build.py
-```
-
-MCP distributions are built by the `mcp-dist.yml` workflow from tags matching:
-
-```text
-mcp-v*
-```
+- **App releases**: pushing a plain `vX.Y.Z` tag (matching `v[0-9]*`) triggers
+  `release.yml`, which builds the app with
+  `VIPER_IDE_BASE_URL=https://pydevices.github.io/workbench` via
+  `python3 build.py --skip-tests`, zips `build/`, and attaches it to a GitHub
+  Release for that tag. It first refuses to run against a pre-fork tree (a
+  `package.json` name that isn't Workbench's), since the `v0.5.x`-`v0.6.x`
+  tags inherited from ViperIDE predate the fork. `workflow_dispatch` can
+  re-run it against an existing tag for a catch-up release.
+- **MCP releases**: pushing an `mcp-v*` tag triggers `mcp-dist.yml`, which
+  publishes only the MCP tool's npm artifact from `mcp/`. It does not touch
+  the app release.
+- **GitHub Pages**: every push to `main` runs `static.yml`, which builds with
+  `python3 build.py --prepare && npm run lint && npm run test`, then
+  `python3 build.py --skip-tests`, and deploys `build/` to
+  <https://pydevices.github.io/workbench/>. This is separate from, and more
+  frequent than, either tagged release track above.
 
 Before release-oriented changes, verify both the root application build and any affected MCP package behavior.

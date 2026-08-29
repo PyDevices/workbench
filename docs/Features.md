@@ -1,4 +1,4 @@
-# ViperIDE Features
+# Workbench Features
 
 - No software installation required, works out of the box
 - Covers most of the functionality of tools like `Thonny`, `mpremote`, `ampy`, `rshell`
@@ -7,8 +7,8 @@
   - [`WebREPL over internet 🌎`](Web-REPL-Relay.md)
   - [`WebREPL in local network`](Web-REPL-Server.md)
   - [`Bluetooth LE`](Bluetooth-REPL.md)
-  - [`P2P/WebRTC Bridge`](https://viper-ide.org/bridge.html)
-  - [`Virtual Device`](https://viper-ide.org/?vm=1)
+  - [`P2P/WebRTC Bridge`](https://pydevices.github.io/workbench/bridge.html)
+  - [`Virtual Device`](https://pydevices.github.io/workbench/?vm=1) — Workbench also exposes this as its own simulator toolbar button (see the main [README](../README.md))
 - **File Editor**
   - Syntax highlighting for `.py`, `.json`, `.inf`, `.toml`, `.pem`
   - Auto expand/minify of `.json` files
@@ -93,3 +93,6 @@
   Try the provided `Use WebUSB instead of WebSerial` setting.
   Otherwise, only `BLE`, `WebREPL`, `P2P` connection is possible.
 - On iOS, `WebUSB` and `WebBluetooth` are not available. Only `WebREPL` and `P2P` works.
+
+---
+This guide originates from [ViperIDE](https://github.com/vshymanskyy/ViperIDE)'s documentation; Workbench is a fork.

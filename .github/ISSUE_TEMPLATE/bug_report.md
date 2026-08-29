@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Create a report to help us improve Workbench
 title: ''
 labels: ''
 assignees: ''
@@ -11,11 +11,11 @@ assignees: ''
 A clear and concise description of what the bug is.
 
 **Setup**
- - MicroPython board: [e.g. ESP32, RPi Pico W]
+ - MicroPython board, or the built-in simulator: [e.g. ESP32, RPi Pico W, Simulator]
  - MicroPython version: [e.g. 1.23.0]
  - OS version: [e.g. Windows, Android 13]
  - Browser: [e.g. chrome, safari]
- - Connection type: [e.g. USB, BLE, WebREPL]
+ - Connection type: [e.g. USB, BLE, WebREPL, Simulator]
 
 **To Reproduce**
 Steps to reproduce the behavior:

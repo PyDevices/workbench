@@ -35,12 +35,20 @@ What this fork changes:
 
 ```bash
 npm install
-python3 build.py --prepare   # fetch MicroPython WASM assets
-npm run start                # dev server at http://localhost:10001
+python3 build.py --skip-tests   # full build (lint/test skipped) into build/
+npm run start                   # watch server at http://localhost:10001
 ```
 
-`python3 build.py` produces the deployable site in `build/`. CI deploys `main`
-to GitHub Pages.
+`python3 build.py --skip-tests` produces the deployable site in `build/`,
+including the MicroPython WASM assets (`micropython.wasm`, the
+`mpy-cross-*.wasm` binaries, `ruff_wasm_bg.wasm`) that the dev server needs to
+serve the simulator, `.mpy` compile and lint. `--prepare` on its own stops
+before that step — it only vendors dependencies (`npm install`,
+`python-minifier`, the virtual filesystem tarballs) so tools like `npm test`
+have what they need without a full build. `npm run start` reuses whatever is
+already in `build/`, so run the full build first (or after pulling changes
+that touch assets). Plain `python3 build.py` (no flags) also runs lint and
+tests before building. CI deploys `main` to GitHub Pages.
 
 ### Testing
 
@@ -58,6 +66,22 @@ the simulator, running every example, resizing, resetting, installing a
 package — so it is what catches PyDevices-runtime regressions the protocol
 suite can't see. Run `python3 build.py --skip-tests` first if `build/` is
 stale.
+
+## Releases
+
+- Plain `vX.Y.Z` tags (e.g. `v1.2.0`) release the app itself: a GitHub Release
+  is created with the built `build/` bundle attached as a zip.
+- `mcp-v*` tags release only the MCP tool's npm artifact, from `mcp/`.
+- The inherited `v0.5.x`–`v0.6.x` tags predate the fork and are upstream
+  ViperIDE release history, not Workbench releases.
+
+## Support
+
+- Issues: <https://github.com/PyDevices/workbench/issues> (just enabled).
+- Browsers: board connectivity (Web Serial / WebUSB / Bluetooth) requires a
+  Chromium-based browser (Chrome, Edge, Opera, Brave, etc.) — not available on
+  Safari or iOS. The simulator has no such requirement and works in any
+  modern browser.
 
 ## License
 

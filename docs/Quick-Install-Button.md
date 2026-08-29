@@ -1,18 +1,18 @@
 
-## Sharing Your Projects Using ViperIDE
+## Sharing Your Projects Using Workbench
 
-ViperIDE makes it easy to distribute packages, including:
+Workbench makes it easy to distribute packages, including:
 
 - Libraries and modules
 - Applications, projects, demos and code samples
 
 For instance, you can install [`aiodns`](https://github.com/vshymanskyy/aiodns) using the following button:
 
-[<img src="https://raw.githubusercontent.com/vshymanskyy/ViperIDE/refs/heads/main/assets/btn_install.png" alt="Install using ViperIDE" height="48"/>](https://viper-ide.org/?install=github:vshymanskyy/aiodns)
+[<img src="https://raw.githubusercontent.com/vshymanskyy/ViperIDE/refs/heads/main/assets/btn_install.png" alt="Install using Workbench" height="48"/>](https://pydevices.github.io/workbench/?install=github:vshymanskyy/aiodns)
 
 ## Creating a Quick Install Link
 
-To create a quick install link, use the format `https://viper-ide.org/?install=YOUR_LINK`. The `YOUR_LINK` part can be one of the following:
+To create a quick install link, use the format `https://pydevices.github.io/workbench/?install=YOUR_LINK`. The `YOUR_LINK` part can be one of the following:
 
 - `github:org/repo`
 - `github:org/repo/path/to/package.json`
@@ -31,7 +31,7 @@ To create a quick install link, use the format `https://viper-ide.org/?install=Y
 
 ## Showing a Readme
 
-When the link is opened, ViperIDE fetches your `package.json` and, if it has a `readme` field, opens that document in a tab. This lets people read what the package does before connecting a device and installing it.
+When the link is opened, Workbench fetches your `package.json` and, if it has a `readme` field, opens that document in a tab. This lets people read what the package does before connecting a device and installing it.
 
 The `readme` value is a link in the same forms as above, so a plain file name is resolved relative to the `package.json` it is written in, and `@branch-or-tag` from the install link is respected.
 
@@ -44,5 +44,8 @@ Links are shown but **not clickable** - due to security reasons, the readme is n
 To insert the install button into your `README.md`, use the following markdown code:
 
 ```md
-[<img src="https://raw.githubusercontent.com/vshymanskyy/ViperIDE/refs/heads/main/assets/btn_install.png" alt="Install using ViperIDE" height="48"/>](https://viper-ide.org/?install=YOUR_LINK)
+[<img src="https://raw.githubusercontent.com/vshymanskyy/ViperIDE/refs/heads/main/assets/btn_install.png" alt="Install using Workbench" height="48"/>](https://pydevices.github.io/workbench/?install=YOUR_LINK)
 ```
+
+---
+This guide originates from [ViperIDE](https://github.com/vshymanskyy/ViperIDE)'s documentation; Workbench is a fork. The install-button image above is served from upstream's repository.

@@ -13,9 +13,12 @@ Verify that the OS recognizes the device.
 - Some USB devices require drivers installation
 - Some boards are not detected by Android via USB OTG and thus won't work
 
-#### 2. Connect [ViperIDE](https://viper-ide.org) to your device using USB / Serial
+#### 2. Connect [Workbench](https://pydevices.github.io/workbench/) to your device using USB / Serial
 
-Use USB button in `ViperIDE` to connect to your device.
+Use the USB button in `Workbench` to connect to your device.
 
 Select your board from the list of available devices.
+
+---
+This guide originates from [ViperIDE](https://github.com/vshymanskyy/ViperIDE)'s documentation; Workbench is a fork.
 

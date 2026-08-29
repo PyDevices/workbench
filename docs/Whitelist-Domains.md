@@ -1,10 +1,10 @@
 
-## Whitelist Domains for ViperIDE
+## Whitelist Domains for Workbench
 
-To ensure the correct functionality of the ViperIDE web app, IT departments are advised to unblock or whitelist the following domains:
+To ensure the correct functionality of the Workbench web app, IT departments are advised to unblock or whitelist the following domains:
 
-- `viper-ide.org` - the main IDE server (currently hosted on GitHub Pages)
-- `hub.viper-ide.org` - the collaborative features and remote device connection services
+- `pydevices.github.io` - the main IDE server (hosted on GitHub Pages)
+- `hub.viper-ide.org` - the collaborative features and remote device connection services (inherited from upstream ViperIDE, still used by the WebREPL relay)
 - `micropython.org` - MicroPython package index / library manager
 - `raw.githubusercontent.com`, `gitlab.com` - additional MicroPython packages
 
