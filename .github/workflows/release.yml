@@ -29,7 +29,19 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Refuse pre-fork tags
+        # Every inherited ViperIDE tag (v0.5.x-v0.6.x) predates the fork;
+        # building one publishes upstream's app under this project's name
+        # (it happened once - the v0.6.5 catch-up). Workbench releases only.
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          if [[ "$NAME" != *[Ww]orkbench* ]]; then
+            echo "::error::Tag checks out '$NAME', not Workbench - refusing to release a pre-fork tree." >&2
+            exit 1
+          fi
       - name: Build the app
+        env:
+          VIPER_IDE_BASE_URL: https://pydevices.github.io/workbench
         run: |
           npm ci
           python3 build.py --skip-tests
