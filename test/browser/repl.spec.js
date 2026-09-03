@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 //
-// Regression coverage for the empty-single-input lexer bug (cmods patch
-// 0008 / mailbox 7e2367c): a bare Enter used to print a traceback nobody
-// caused, on the very first line of the very first session.
+// Regression coverage for the empty-single-input lexer bug (the org's
+// MicroPython patch 0008, originally commit 7e2367c in the build workspace):
+// a bare Enter used to print a traceback nobody caused, on the very first
+// line of the very first session.
 import { test, expect } from '@playwright/test'
 import { connectSimulator, terminalText, focusTerminal } from './helpers.js'
 

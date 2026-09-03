@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 //
-// Regression coverage for the stale-callback bug (cmods patch 0007 / commit
-// 4533056): asyncio's scheduler leaves a setTimeout callback running past a
+// Regression coverage for the stale-callback bug (the org's MicroPython
+// patch 0007, originally commit 4533056 in the build workspace):
+// asyncio's scheduler leaves a setTimeout callback running past a
 // VM restart, and used to fire into the new interpreter with a recycled
 // jsffi proxy index - surfacing as an uncaught "TypeError: 'module' object
 // isn't callable" sometime after any reset that followed a running program.

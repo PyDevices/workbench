@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 //
-// Regression coverage for the wasmbridge leak (cmods patch 0007 / commit
-// 71af1b6, generation guard 4533056): restarting the VM while an appdev
+// Regression coverage for the wasmbridge leak (the org's MicroPython patch
+// 0007, originally commit 71af1b6 in the build workspace, with the
+// generation guard in 4533056): restarting the VM while an appdev
 // program's paint loop and canvas listeners are live used to reliably crash
 // the tab. Any page method call after a real crash rejects, which is the
 // natural way Playwright surfaces one - no explicit crash listener needed
