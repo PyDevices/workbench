@@ -435,7 +435,7 @@ function updateMemoryViews() {
   var b = wasmMemory.buffer;
   HEAP8 = new Int8Array(b);
   HEAP16 = new Int16Array(b);
-  HEAPU8 = new Uint8Array(b);
+  Module['HEAPU8'] = HEAPU8 = new Uint8Array(b);
   HEAPU16 = new Uint16Array(b);
   HEAP32 = new Int32Array(b);
   HEAPU32 = new Uint32Array(b);
@@ -5309,6 +5309,7 @@ var findStringEnd = (heapOrArray, idx, maxBytesToRead, ignoreNul) => {
 
 
 
+
   FS.createPreloadedFile = FS_createPreloadedFile;
   FS.preloadFile = FS_preloadFile;
   FS.staticInit();;
@@ -5542,7 +5543,6 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'INT53_MIN',
   'bigintToI53Checked',
   'HEAP8',
-  'HEAPU8',
   'HEAP16',
   'HEAPU16',
   'HEAP32',
@@ -5844,9 +5844,7 @@ var _proxy_c_to_js_has_attr = Module['_proxy_c_to_js_has_attr'] = makeInvalidEar
 var _proxy_c_to_js_lookup_attr = Module['_proxy_c_to_js_lookup_attr'] = makeInvalidEarlyAccess('_proxy_c_to_js_lookup_attr');
 var _proxy_c_to_js_store_attr = Module['_proxy_c_to_js_store_attr'] = makeInvalidEarlyAccess('_proxy_c_to_js_store_attr');
 var _proxy_c_to_js_delete_attr = Module['_proxy_c_to_js_delete_attr'] = makeInvalidEarlyAccess('_proxy_c_to_js_delete_attr');
-var _proxy_c_to_js_get_type = Module['_proxy_c_to_js_get_type'] = makeInvalidEarlyAccess('_proxy_c_to_js_get_type');
-var _proxy_c_to_js_get_array = Module['_proxy_c_to_js_get_array'] = makeInvalidEarlyAccess('_proxy_c_to_js_get_array');
-var _proxy_c_to_js_get_dict = Module['_proxy_c_to_js_get_dict'] = makeInvalidEarlyAccess('_proxy_c_to_js_get_dict');
+var _proxy_c_to_js_get_type_and_data = Module['_proxy_c_to_js_get_type_and_data'] = makeInvalidEarlyAccess('_proxy_c_to_js_get_type_and_data');
 var _proxy_c_to_js_get_iter = Module['_proxy_c_to_js_get_iter'] = makeInvalidEarlyAccess('_proxy_c_to_js_get_iter');
 var _proxy_c_to_js_iternext = Module['_proxy_c_to_js_iternext'] = makeInvalidEarlyAccess('_proxy_c_to_js_iternext');
 var _proxy_c_to_js_resume = Module['_proxy_c_to_js_resume'] = makeInvalidEarlyAccess('_proxy_c_to_js_resume');
@@ -5860,30 +5858,32 @@ var _emscripten_stack_get_free = makeInvalidEarlyAccess('_emscripten_stack_get_f
 var __emscripten_stack_restore = makeInvalidEarlyAccess('__emscripten_stack_restore');
 var __emscripten_stack_alloc = makeInvalidEarlyAccess('__emscripten_stack_alloc');
 var _emscripten_stack_get_current = makeInvalidEarlyAccess('_emscripten_stack_get_current');
-var dynCall_iiii = makeInvalidEarlyAccess('dynCall_iiii');
-var dynCall_vi = makeInvalidEarlyAccess('dynCall_vi');
-var dynCall_iiiii = makeInvalidEarlyAccess('dynCall_iiiii');
 var dynCall_iii = makeInvalidEarlyAccess('dynCall_iii');
-var dynCall_vii = makeInvalidEarlyAccess('dynCall_vii');
-var dynCall_iiiiii = makeInvalidEarlyAccess('dynCall_iiiiii');
-var dynCall_viiii = makeInvalidEarlyAccess('dynCall_viiii');
-var dynCall_ii = makeInvalidEarlyAccess('dynCall_ii');
-var dynCall_viii = makeInvalidEarlyAccess('dynCall_viii');
-var dynCall_i = makeInvalidEarlyAccess('dynCall_i');
+var dynCall_iiii = makeInvalidEarlyAccess('dynCall_iiii');
 var dynCall_iiiiiii = makeInvalidEarlyAccess('dynCall_iiiiiii');
+var dynCall_ii = makeInvalidEarlyAccess('dynCall_ii');
+var dynCall_iiiii = makeInvalidEarlyAccess('dynCall_iiiii');
+var dynCall_viii = makeInvalidEarlyAccess('dynCall_viii');
+var dynCall_iiiiii = makeInvalidEarlyAccess('dynCall_iiiiii');
+var dynCall_di = makeInvalidEarlyAccess('dynCall_di');
+var dynCall_vi = makeInvalidEarlyAccess('dynCall_vi');
 var dynCall_v = makeInvalidEarlyAccess('dynCall_v');
+var dynCall_viiiiii = makeInvalidEarlyAccess('dynCall_viiiiii');
+var dynCall_i = makeInvalidEarlyAccess('dynCall_i');
+var dynCall_vii = makeInvalidEarlyAccess('dynCall_vii');
+var dynCall_viiii = makeInvalidEarlyAccess('dynCall_viiii');
 var dynCall_jji = makeInvalidEarlyAccess('dynCall_jji');
 var dynCall_viiiii = makeInvalidEarlyAccess('dynCall_viiiii');
 var dynCall_viiiiiii = makeInvalidEarlyAccess('dynCall_viiiiiii');
 var dynCall_viiiffiii = makeInvalidEarlyAccess('dynCall_viiiffiii');
 var dynCall_viiiiiiii = makeInvalidEarlyAccess('dynCall_viiiiiiii');
 var dynCall_viiiiiiiii = makeInvalidEarlyAccess('dynCall_viiiiiiiii');
-var dynCall_viiiiii = makeInvalidEarlyAccess('dynCall_viiiiii');
 var dynCall_viiif = makeInvalidEarlyAccess('dynCall_viiif');
 var dynCall_vif = makeInvalidEarlyAccess('dynCall_vif');
 var dynCall_viff = makeInvalidEarlyAccess('dynCall_viff');
 var dynCall_fi = makeInvalidEarlyAccess('dynCall_fi');
 var dynCall_iiiiiiii = makeInvalidEarlyAccess('dynCall_iiiiiiii');
+var dynCall_vid = makeInvalidEarlyAccess('dynCall_vid');
 var dynCall_dd = makeInvalidEarlyAccess('dynCall_dd');
 var dynCall_ddd = makeInvalidEarlyAccess('dynCall_ddd');
 var dynCall_jiji = makeInvalidEarlyAccess('dynCall_jiji');
@@ -5920,9 +5920,7 @@ function assignWasmExports(wasmExports) {
   assert(typeof wasmExports['proxy_c_to_js_lookup_attr'] != 'undefined', 'missing Wasm export: proxy_c_to_js_lookup_attr');
   assert(typeof wasmExports['proxy_c_to_js_store_attr'] != 'undefined', 'missing Wasm export: proxy_c_to_js_store_attr');
   assert(typeof wasmExports['proxy_c_to_js_delete_attr'] != 'undefined', 'missing Wasm export: proxy_c_to_js_delete_attr');
-  assert(typeof wasmExports['proxy_c_to_js_get_type'] != 'undefined', 'missing Wasm export: proxy_c_to_js_get_type');
-  assert(typeof wasmExports['proxy_c_to_js_get_array'] != 'undefined', 'missing Wasm export: proxy_c_to_js_get_array');
-  assert(typeof wasmExports['proxy_c_to_js_get_dict'] != 'undefined', 'missing Wasm export: proxy_c_to_js_get_dict');
+  assert(typeof wasmExports['proxy_c_to_js_get_type_and_data'] != 'undefined', 'missing Wasm export: proxy_c_to_js_get_type_and_data');
   assert(typeof wasmExports['proxy_c_to_js_get_iter'] != 'undefined', 'missing Wasm export: proxy_c_to_js_get_iter');
   assert(typeof wasmExports['proxy_c_to_js_iternext'] != 'undefined', 'missing Wasm export: proxy_c_to_js_iternext');
   assert(typeof wasmExports['proxy_c_to_js_resume'] != 'undefined', 'missing Wasm export: proxy_c_to_js_resume');
@@ -5936,30 +5934,32 @@ function assignWasmExports(wasmExports) {
   assert(typeof wasmExports['_emscripten_stack_restore'] != 'undefined', 'missing Wasm export: _emscripten_stack_restore');
   assert(typeof wasmExports['_emscripten_stack_alloc'] != 'undefined', 'missing Wasm export: _emscripten_stack_alloc');
   assert(typeof wasmExports['emscripten_stack_get_current'] != 'undefined', 'missing Wasm export: emscripten_stack_get_current');
-  assert(typeof wasmExports['dynCall_iiii'] != 'undefined', 'missing Wasm export: dynCall_iiii');
-  assert(typeof wasmExports['dynCall_vi'] != 'undefined', 'missing Wasm export: dynCall_vi');
-  assert(typeof wasmExports['dynCall_iiiii'] != 'undefined', 'missing Wasm export: dynCall_iiiii');
   assert(typeof wasmExports['dynCall_iii'] != 'undefined', 'missing Wasm export: dynCall_iii');
-  assert(typeof wasmExports['dynCall_vii'] != 'undefined', 'missing Wasm export: dynCall_vii');
-  assert(typeof wasmExports['dynCall_iiiiii'] != 'undefined', 'missing Wasm export: dynCall_iiiiii');
-  assert(typeof wasmExports['dynCall_viiii'] != 'undefined', 'missing Wasm export: dynCall_viiii');
-  assert(typeof wasmExports['dynCall_ii'] != 'undefined', 'missing Wasm export: dynCall_ii');
-  assert(typeof wasmExports['dynCall_viii'] != 'undefined', 'missing Wasm export: dynCall_viii');
-  assert(typeof wasmExports['dynCall_i'] != 'undefined', 'missing Wasm export: dynCall_i');
+  assert(typeof wasmExports['dynCall_iiii'] != 'undefined', 'missing Wasm export: dynCall_iiii');
   assert(typeof wasmExports['dynCall_iiiiiii'] != 'undefined', 'missing Wasm export: dynCall_iiiiiii');
+  assert(typeof wasmExports['dynCall_ii'] != 'undefined', 'missing Wasm export: dynCall_ii');
+  assert(typeof wasmExports['dynCall_iiiii'] != 'undefined', 'missing Wasm export: dynCall_iiiii');
+  assert(typeof wasmExports['dynCall_viii'] != 'undefined', 'missing Wasm export: dynCall_viii');
+  assert(typeof wasmExports['dynCall_iiiiii'] != 'undefined', 'missing Wasm export: dynCall_iiiiii');
+  assert(typeof wasmExports['dynCall_di'] != 'undefined', 'missing Wasm export: dynCall_di');
+  assert(typeof wasmExports['dynCall_vi'] != 'undefined', 'missing Wasm export: dynCall_vi');
   assert(typeof wasmExports['dynCall_v'] != 'undefined', 'missing Wasm export: dynCall_v');
+  assert(typeof wasmExports['dynCall_viiiiii'] != 'undefined', 'missing Wasm export: dynCall_viiiiii');
+  assert(typeof wasmExports['dynCall_i'] != 'undefined', 'missing Wasm export: dynCall_i');
+  assert(typeof wasmExports['dynCall_vii'] != 'undefined', 'missing Wasm export: dynCall_vii');
+  assert(typeof wasmExports['dynCall_viiii'] != 'undefined', 'missing Wasm export: dynCall_viiii');
   assert(typeof wasmExports['dynCall_jji'] != 'undefined', 'missing Wasm export: dynCall_jji');
   assert(typeof wasmExports['dynCall_viiiii'] != 'undefined', 'missing Wasm export: dynCall_viiiii');
   assert(typeof wasmExports['dynCall_viiiiiii'] != 'undefined', 'missing Wasm export: dynCall_viiiiiii');
   assert(typeof wasmExports['dynCall_viiiffiii'] != 'undefined', 'missing Wasm export: dynCall_viiiffiii');
   assert(typeof wasmExports['dynCall_viiiiiiii'] != 'undefined', 'missing Wasm export: dynCall_viiiiiiii');
   assert(typeof wasmExports['dynCall_viiiiiiiii'] != 'undefined', 'missing Wasm export: dynCall_viiiiiiiii');
-  assert(typeof wasmExports['dynCall_viiiiii'] != 'undefined', 'missing Wasm export: dynCall_viiiiii');
   assert(typeof wasmExports['dynCall_viiif'] != 'undefined', 'missing Wasm export: dynCall_viiif');
   assert(typeof wasmExports['dynCall_vif'] != 'undefined', 'missing Wasm export: dynCall_vif');
   assert(typeof wasmExports['dynCall_viff'] != 'undefined', 'missing Wasm export: dynCall_viff');
   assert(typeof wasmExports['dynCall_fi'] != 'undefined', 'missing Wasm export: dynCall_fi');
   assert(typeof wasmExports['dynCall_iiiiiiii'] != 'undefined', 'missing Wasm export: dynCall_iiiiiiii');
+  assert(typeof wasmExports['dynCall_vid'] != 'undefined', 'missing Wasm export: dynCall_vid');
   assert(typeof wasmExports['dynCall_dd'] != 'undefined', 'missing Wasm export: dynCall_dd');
   assert(typeof wasmExports['dynCall_ddd'] != 'undefined', 'missing Wasm export: dynCall_ddd');
   assert(typeof wasmExports['dynCall_jiji'] != 'undefined', 'missing Wasm export: dynCall_jiji');
@@ -5992,9 +5992,7 @@ function assignWasmExports(wasmExports) {
   _proxy_c_to_js_lookup_attr = Module['_proxy_c_to_js_lookup_attr'] = createExportWrapper('proxy_c_to_js_lookup_attr', 3);
   _proxy_c_to_js_store_attr = Module['_proxy_c_to_js_store_attr'] = createExportWrapper('proxy_c_to_js_store_attr', 3);
   _proxy_c_to_js_delete_attr = Module['_proxy_c_to_js_delete_attr'] = createExportWrapper('proxy_c_to_js_delete_attr', 2);
-  _proxy_c_to_js_get_type = Module['_proxy_c_to_js_get_type'] = createExportWrapper('proxy_c_to_js_get_type', 1);
-  _proxy_c_to_js_get_array = Module['_proxy_c_to_js_get_array'] = createExportWrapper('proxy_c_to_js_get_array', 2);
-  _proxy_c_to_js_get_dict = Module['_proxy_c_to_js_get_dict'] = createExportWrapper('proxy_c_to_js_get_dict', 2);
+  _proxy_c_to_js_get_type_and_data = Module['_proxy_c_to_js_get_type_and_data'] = createExportWrapper('proxy_c_to_js_get_type_and_data', 2);
   _proxy_c_to_js_get_iter = Module['_proxy_c_to_js_get_iter'] = createExportWrapper('proxy_c_to_js_get_iter', 1);
   _proxy_c_to_js_iternext = Module['_proxy_c_to_js_iternext'] = createExportWrapper('proxy_c_to_js_iternext', 2);
   _proxy_c_to_js_resume = Module['_proxy_c_to_js_resume'] = createExportWrapper('proxy_c_to_js_resume', 2);
@@ -6008,30 +6006,32 @@ function assignWasmExports(wasmExports) {
   __emscripten_stack_restore = wasmExports['_emscripten_stack_restore'];
   __emscripten_stack_alloc = wasmExports['_emscripten_stack_alloc'];
   _emscripten_stack_get_current = wasmExports['emscripten_stack_get_current'];
-  dynCall_iiii = dynCalls['iiii'] = createExportWrapper('dynCall_iiii', 4);
-  dynCall_vi = dynCalls['vi'] = createExportWrapper('dynCall_vi', 2);
-  dynCall_iiiii = dynCalls['iiiii'] = createExportWrapper('dynCall_iiiii', 5);
   dynCall_iii = dynCalls['iii'] = createExportWrapper('dynCall_iii', 3);
-  dynCall_vii = dynCalls['vii'] = createExportWrapper('dynCall_vii', 3);
-  dynCall_iiiiii = dynCalls['iiiiii'] = createExportWrapper('dynCall_iiiiii', 6);
-  dynCall_viiii = dynCalls['viiii'] = createExportWrapper('dynCall_viiii', 5);
-  dynCall_ii = dynCalls['ii'] = createExportWrapper('dynCall_ii', 2);
-  dynCall_viii = dynCalls['viii'] = createExportWrapper('dynCall_viii', 4);
-  dynCall_i = dynCalls['i'] = createExportWrapper('dynCall_i', 1);
+  dynCall_iiii = dynCalls['iiii'] = createExportWrapper('dynCall_iiii', 4);
   dynCall_iiiiiii = dynCalls['iiiiiii'] = createExportWrapper('dynCall_iiiiiii', 7);
+  dynCall_ii = dynCalls['ii'] = createExportWrapper('dynCall_ii', 2);
+  dynCall_iiiii = dynCalls['iiiii'] = createExportWrapper('dynCall_iiiii', 5);
+  dynCall_viii = dynCalls['viii'] = createExportWrapper('dynCall_viii', 4);
+  dynCall_iiiiii = dynCalls['iiiiii'] = createExportWrapper('dynCall_iiiiii', 6);
+  dynCall_di = dynCalls['di'] = createExportWrapper('dynCall_di', 2);
+  dynCall_vi = dynCalls['vi'] = createExportWrapper('dynCall_vi', 2);
   dynCall_v = dynCalls['v'] = createExportWrapper('dynCall_v', 1);
+  dynCall_viiiiii = dynCalls['viiiiii'] = createExportWrapper('dynCall_viiiiii', 7);
+  dynCall_i = dynCalls['i'] = createExportWrapper('dynCall_i', 1);
+  dynCall_vii = dynCalls['vii'] = createExportWrapper('dynCall_vii', 3);
+  dynCall_viiii = dynCalls['viiii'] = createExportWrapper('dynCall_viiii', 5);
   dynCall_jji = dynCalls['jji'] = createExportWrapper('dynCall_jji', 3);
   dynCall_viiiii = dynCalls['viiiii'] = createExportWrapper('dynCall_viiiii', 6);
   dynCall_viiiiiii = dynCalls['viiiiiii'] = createExportWrapper('dynCall_viiiiiii', 8);
   dynCall_viiiffiii = dynCalls['viiiffiii'] = createExportWrapper('dynCall_viiiffiii', 9);
   dynCall_viiiiiiii = dynCalls['viiiiiiii'] = createExportWrapper('dynCall_viiiiiiii', 9);
   dynCall_viiiiiiiii = dynCalls['viiiiiiiii'] = createExportWrapper('dynCall_viiiiiiiii', 10);
-  dynCall_viiiiii = dynCalls['viiiiii'] = createExportWrapper('dynCall_viiiiii', 7);
   dynCall_viiif = dynCalls['viiif'] = createExportWrapper('dynCall_viiif', 5);
   dynCall_vif = dynCalls['vif'] = createExportWrapper('dynCall_vif', 3);
   dynCall_viff = dynCalls['viff'] = createExportWrapper('dynCall_viff', 4);
   dynCall_fi = dynCalls['fi'] = createExportWrapper('dynCall_fi', 2);
   dynCall_iiiiiiii = dynCalls['iiiiiiii'] = createExportWrapper('dynCall_iiiiiiii', 8);
+  dynCall_vid = dynCalls['vid'] = createExportWrapper('dynCall_vid', 3);
   dynCall_dd = dynCalls['dd'] = createExportWrapper('dynCall_dd', 2);
   dynCall_ddd = dynCalls['ddd'] = createExportWrapper('dynCall_ddd', 3);
   dynCall_jiji = dynCalls['jiji'] = createExportWrapper('dynCall_jiji', 4);
@@ -6134,6 +6134,8 @@ var wasmImports = {
   /** @export */
   invoke_viiii,
   /** @export */
+  invoke_viiiiii,
+  /** @export */
   js_check_existing,
   /** @export */
   js_get_error_info,
@@ -6207,17 +6209,6 @@ var wasmImports = {
   store_attr
 };
 
-function invoke_v(index) {
-  var sp = stackSave();
-  try {
-    dynCall_v(index);
-  } catch(e) {
-    stackRestore(sp);
-    if (!(e instanceof EmscriptenEH)) throw e;
-    _setThrew(1, 0);
-  }
-}
-
 function invoke_ii(index,a1) {
   var sp = stackSave();
   try {
@@ -6229,10 +6220,10 @@ function invoke_ii(index,a1) {
   }
 }
 
-function invoke_vii(index,a1,a2) {
+function invoke_iiii(index,a1,a2,a3) {
   var sp = stackSave();
   try {
-    dynCall_vii(index,a1,a2);
+    return dynCall_iiii(index,a1,a2,a3);
   } catch(e) {
     stackRestore(sp);
     if (!(e instanceof EmscriptenEH)) throw e;
@@ -6240,10 +6231,54 @@ function invoke_vii(index,a1,a2) {
   }
 }
 
-function invoke_iiii(index,a1,a2,a3) {
+function invoke_vi(index,a1) {
   var sp = stackSave();
   try {
-    return dynCall_iiii(index,a1,a2,a3);
+    dynCall_vi(index,a1);
+  } catch(e) {
+    stackRestore(sp);
+    if (!(e instanceof EmscriptenEH)) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_iiiiii(index,a1,a2,a3,a4,a5) {
+  var sp = stackSave();
+  try {
+    return dynCall_iiiiii(index,a1,a2,a3,a4,a5);
+  } catch(e) {
+    stackRestore(sp);
+    if (!(e instanceof EmscriptenEH)) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_v(index) {
+  var sp = stackSave();
+  try {
+    dynCall_v(index);
+  } catch(e) {
+    stackRestore(sp);
+    if (!(e instanceof EmscriptenEH)) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_iii(index,a1,a2) {
+  var sp = stackSave();
+  try {
+    return dynCall_iii(index,a1,a2);
+  } catch(e) {
+    stackRestore(sp);
+    if (!(e instanceof EmscriptenEH)) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_viiiiii(index,a1,a2,a3,a4,a5,a6) {
+  var sp = stackSave();
+  try {
+    dynCall_viiiiii(index,a1,a2,a3,a4,a5,a6);
   } catch(e) {
     stackRestore(sp);
     if (!(e instanceof EmscriptenEH)) throw e;
@@ -6273,21 +6308,10 @@ function invoke_iiiii(index,a1,a2,a3,a4) {
   }
 }
 
-function invoke_iii(index,a1,a2) {
+function invoke_vii(index,a1,a2) {
   var sp = stackSave();
   try {
-    return dynCall_iii(index,a1,a2);
-  } catch(e) {
-    stackRestore(sp);
-    if (!(e instanceof EmscriptenEH)) throw e;
-    _setThrew(1, 0);
-  }
-}
-
-function invoke_vi(index,a1) {
-  var sp = stackSave();
-  try {
-    dynCall_vi(index,a1);
+    dynCall_vii(index,a1,a2);
   } catch(e) {
     stackRestore(sp);
     if (!(e instanceof EmscriptenEH)) throw e;
@@ -6310,17 +6334,6 @@ function invoke_viiii(index,a1,a2,a3,a4) {
   var sp = stackSave();
   try {
     dynCall_viiii(index,a1,a2,a3,a4);
-  } catch(e) {
-    stackRestore(sp);
-    if (!(e instanceof EmscriptenEH)) throw e;
-    _setThrew(1, 0);
-  }
-}
-
-function invoke_iiiiii(index,a1,a2,a3,a4,a5) {
-  var sp = stackSave();
-  try {
-    return dynCall_iiiiii(index,a1,a2,a3,a4,a5);
   } catch(e) {
     stackRestore(sp);
     if (!(e instanceof EmscriptenEH)) throw e;
@@ -6802,25 +6815,20 @@ class PyProxy {
             return js_obj;
         }
 
+        const obj_data = Module._malloc(2 * 4);
         const type = Module.ccall(
-            "proxy_c_to_js_get_type",
+            "proxy_c_to_js_get_type_and_data",
             "number",
-            ["number"],
-            [js_obj._ref],
+            ["number", "pointer"],
+            [js_obj._ref, obj_data],
         );
 
+        let js_obj_out;
         if (type === 1 || type === 2) {
             // List or tuple.
-            const array_ref = Module._malloc(2 * 4);
             const item = Module._malloc(3 * 4);
-            Module.ccall(
-                "proxy_c_to_js_get_array",
-                "null",
-                ["number", "pointer"],
-                [js_obj._ref, array_ref],
-            );
-            const len = Module.getValue(array_ref, "i32");
-            const items_ptr = Module.getValue(array_ref + 4, "i32");
+            const len = Module.getValue(obj_data, "i32");
+            const items_ptr = Module.getValue(obj_data + 4, "i32");
             const js_array = [];
             for (let i = 0; i < len; ++i) {
                 Module.ccall(
@@ -6832,23 +6840,13 @@ class PyProxy {
                 const js_item = proxy_convert_mp_to_js_obj_jsside(item);
                 js_array.push(PyProxy.toJs(js_item));
             }
-            Module._free(array_ref);
             Module._free(item);
-            return js_array;
-        }
-
-        if (type === 3) {
+            js_obj_out = js_array;
+        } else if (type === 3) {
             // Dict.
-            const map_ref = Module._malloc(2 * 4);
             const item = Module._malloc(3 * 4);
-            Module.ccall(
-                "proxy_c_to_js_get_dict",
-                "null",
-                ["number", "pointer"],
-                [js_obj._ref, map_ref],
-            );
-            const alloc = Module.getValue(map_ref, "i32");
-            const table_ptr = Module.getValue(map_ref + 4, "i32");
+            const alloc = Module.getValue(obj_data, "i32");
+            const table_ptr = Module.getValue(obj_data + 4, "i32");
             const js_dict = {};
             for (let i = 0; i < alloc; ++i) {
                 const mp_key = Module.getValue(table_ptr + i * 8, "i32");
@@ -6879,13 +6877,20 @@ class PyProxy {
                     js_dict[js_key] = PyProxy.toJs(js_value);
                 }
             }
-            Module._free(map_ref);
             Module._free(item);
-            return js_dict;
+            js_obj_out = js_dict;
+        } else if (type === 4) {
+            // Buffer protocol; create a copy of the data to a new Uint8Array.
+            const len = Module.getValue(obj_data, "i32");
+            const buf = Module.getValue(obj_data + 4, "i32");
+            js_obj_out = Module.HEAPU8.slice(buf, buf + len);
+        } else {
+            // Cannot convert to JS, leave as a PyProxy.
+            js_obj_out = js_obj;
         }
 
-        // Cannot convert to JS, leave as a PyProxy.
-        return js_obj;
+        Module._free(obj_data);
+        return js_obj_out;
     }
 }
 
