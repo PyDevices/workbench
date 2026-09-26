@@ -9,14 +9,14 @@ import { connectSimulator, focusTerminal, terminalText } from './helpers.js'
 test('a package installs from the panel and imports', async ({ page }) => {
     await connectSimulator(page)
 
-    const installed = await page.evaluate(() => window.app.installPkg('aioprof'))
+    const installed = await page.evaluate(() => window.app.installPkg('fnmatch'))
     expect(installed).toBe(true)
 
     await focusTerminal(page)
     const before = await terminalText(page)
-    await page.keyboard.type('import aioprof; print("import-ok", aioprof.__file__)')
+    await page.keyboard.type('import fnmatch; print("import-ok", fnmatch.__file__)')
     await page.keyboard.press('Enter')
     await expect
         .poll(async () => (await terminalText(page)).slice(before.length))
-        .toContain('import-ok /lib/aioprof')
+        .toContain('import-ok /lib/fnmatch')
 })
