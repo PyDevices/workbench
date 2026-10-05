@@ -2,9 +2,9 @@
 //
 // Every example the VM ships runs clean and paints something. One connect
 // and one page for the whole file, each example run as a step within it -
-// booting the simulator (the mip install alone is ~55 requests) dominates
-// the cost of this suite far more than running six short programs does, and
-// nothing here mutates state a later example depends on.
+// booting the simulator dominates the cost of this suite far more than
+// running six short programs does, and nothing here mutates state a later
+// example depends on.
 import { test, expect } from '@playwright/test'
 import { connectSimulator, runFile, distinctCanvasColors, clickCanvas } from './helpers.js'
 
