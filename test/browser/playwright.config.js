@@ -11,8 +11,8 @@ import { defineConfig } from '@playwright/test'
 export default defineConfig({
     testDir: '.',
     timeout: 60_000,
-    // The PyDevices VM installs pydevices-desktop from mip on every connect
-    // (~55 small requests) before it prints a prompt; give it room.
+    // The PyDevices VM boots the WASM runtime before it prints a prompt; give
+    // it room on a slow machine.
     expect: { timeout: 45_000 },
     fullyParallel: false,
     workers: 1,

@@ -36,8 +36,6 @@ export function setBootSize(width, height) {
     bootSize = { width, height }
 }
 
-const MIP_INDEX = 'https://PyDevices.github.io/mip'
-
 // The runtime is ~6 MB, so it is fetched on first connect rather than bundled.
 // The import has to survive Rollup: an IIFE bundle cannot code-split, and a
 // literal specifier would be inlined (or fail to resolve). Going through
@@ -61,19 +59,14 @@ async function loadPyDevicesMicroPython(mpOpts) {
 }
 
 /*
- * Boot script, mirroring what the PyDevices simulator runs before handing over
- * the REPL: tell displaydev how big the panel is, put the runtime's own
- * directories on sys.path, then make sure the desktop support package is there.
+ * Boot script: put the runtime's own directories on sys.path, then tell
+ * displaydev how big the panel is.
  *
- * board_config is the entry point user code imports, so its presence is what
- * decides whether the package still needs installing - checked as a file rather
- * than an import, which would build a display as a side effect. The install
- * needs the network; failing it leaves a usable REPL without the PyDevices
- * libraries, and the next connect tries again.
- *
- * Order matters: displaydev arrives with the package, so the panel size can only
- * be set once the install has run. Builds that freeze the libraries in will
- * satisfy the import either way.
+ * The PyDevices stack - displaydev, appdev, the desktop board_config and the
+ * rest - is frozen into the WASM runtime, and workbench never installs any of
+ * it. If it is missing, this is a runtime built without it, and the import
+ * below fails loudly rather than reaching for the network. Installing other
+ * packages (examples and the like) is still the package manager's job.
  */
 function bootScript(width, height) {
     return `
@@ -82,20 +75,9 @@ import os, sys
 # target by looking for a sys.path entry that ends with "/lib", and a
 # relative "lib" left it refusing to install anything on the simulator.
 sys.path[:] = [".", ".frozen", "/lib", "/utils"]
-try:
-    os.stat("/lib/board_config.mpy")
-except OSError:
-    try:
-        import mip
-        mip.install("pydevices-desktop", index=${JSON.stringify(MIP_INDEX)}, target="/lib")
-    except Exception as exc:
-        print("PyDevices libraries unavailable offline:", exc)
-try:
-    from displaydev import env_set
-    env_set("PYDEVICES_WIDTH", ${Number(width)})
-    env_set("PYDEVICES_HEIGHT", ${Number(height)})
-except ImportError:
-    print("displaydev unavailable - the display will use its own default size")
+from displaydev import env_set
+env_set("PYDEVICES_WIDTH", ${Number(width)})
+env_set("PYDEVICES_HEIGHT", ${Number(height)})
 os.chdir("/")
 `
 }

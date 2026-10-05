@@ -21,9 +21,10 @@ sent upstream.
 
 What this fork changes:
 
-- The virtual device is the PyDevices MicroPython WASM build (lvgl,
-  pdwidgets, pygraphics and palettes built in; `displaydev`, `board_config`
-  and the rest of `pydevices-desktop` install from mip at boot), reached from
+- The virtual device is the PyDevices MicroPython WASM build, with the whole
+  PyDevices stack frozen in (lvgl, pdwidgets, pygraphics, palettes,
+  `displaydev`, the desktop `board_config` and the rest; nothing installs at
+  boot), reached from
   its own toolbar button alongside USB/Bluetooth/WebREPL. It gets a real
   display stage — resolution and shape presets including round watch faces,
   live resize, audio, pointer and keyboard input — and boots with example
