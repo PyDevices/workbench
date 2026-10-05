@@ -2,10 +2,8 @@
 import { expect } from '@playwright/test'
 
 /*
- * Connects the PyDevices virtual device and waits for a real prompt - not a
- * fixed delay, since the mip install this triggers (~55 requests for
- * pydevices-desktop) varies with network conditions far more than the WASM
- * boot itself does.
+ * Connects the PyDevices virtual device and waits for a real prompt, not a
+ * fixed delay: the WASM boot's time varies with the machine.
  */
 export async function connectSimulator(page) {
     await page.goto('/')
