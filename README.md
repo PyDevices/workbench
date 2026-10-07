@@ -84,6 +84,8 @@ stale.
   Safari or iOS. The simulator has no such requirement and works in any
   modern browser.
 
+What's planned next is in [ROADMAP.md](ROADMAP.md).
+
 ## License
 
 [MIT](LICENSE), same as ViperIDE.
