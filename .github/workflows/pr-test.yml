@@ -1,8 +1,13 @@
 name: PR Tests
 
+# Documentation-only changes can't change this result, so they don't run it.
 on:
   pull_request:
     branches: ["main"]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'LICENSE'
   workflow_dispatch:
 
 jobs:
