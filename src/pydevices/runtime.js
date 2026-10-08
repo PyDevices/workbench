@@ -75,7 +75,7 @@ import os, sys
 # target by looking for a sys.path entry that ends with "/lib", and a
 # relative "lib" left it refusing to install anything on the simulator.
 sys.path[:] = [".", ".frozen", "/lib", "/utils"]
-from displaydev import env_set
+from boarddev import env_set
 env_set("PYDEVICES_WIDTH", ${Number(width)})
 env_set("PYDEVICES_HEIGHT", ${Number(height)})
 os.chdir("/")
