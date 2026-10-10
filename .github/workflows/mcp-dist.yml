@@ -19,16 +19,16 @@ jobs:
     env:
       VIPER_IDE_BASE_URL: https://pydevices.github.io/workbench
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.x'
       - run: pip install requests
       - run: npm install && python3 build.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: viperide-build
           path: build/
@@ -46,11 +46,11 @@ jobs:
             platform: win32
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: viperide-build
           path: build/
@@ -65,7 +65,7 @@ jobs:
         working-directory: mcp
         shell: bash
         run: bash build-dist.sh ${{ matrix.platform }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dist-${{ matrix.platform }}
           path: |
@@ -76,11 +76,11 @@ jobs:
     needs: build-viperide
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: viperide-build
           path: build/
@@ -93,7 +93,7 @@ jobs:
       - name: Build npm package
         working-directory: mcp
         run: bash build-npm.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: npm-package
           path: mcp/dist/npm-staging/
@@ -106,11 +106,11 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: npm-package
           path: package/
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
@@ -133,7 +133,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/mcp-v')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: artifacts/
           merge-multiple: false
@@ -143,7 +143,7 @@ jobs:
           find artifacts/dist-* -type f \( -name '*.tar.gz' -o -name '*.mcpb' \) -exec cp {} release/ \;
           ls -lh release/
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: release/*
           generate_release_notes: true
