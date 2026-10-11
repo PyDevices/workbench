@@ -32,6 +32,24 @@ What this fork changes:
 - PyDevices branding; no analytics (the Amplitude tracking from upstream is
   removed).
 
+## Opening a gallery example
+
+Any card of the [PyDevices gallery](https://pydevices.github.io/pydevices-examples/gallery/)
+opens here by name:
+
+```
+https://pydevices.github.io/workbench/?vm=1&example=paint
+```
+
+That boots the simulator, writes the example's files to it and opens the
+entry file in the editor, ready for Run. Leave `vm=1` off and the example
+waits for whatever you connect next, so the same link puts it on a board
+over USB. A single-file example lands in the root next to `main.py`, with
+the modules it imports from beside itself; a package example goes under
+`/lib/<name>/`, where a `mip` install would put it; the helpers it uses from
+the examples repository's `lib/utils/` go in `/lib/`. Files it declares in a
+`# manifests:` header are installed through the package manager.
+
 ## Development
 
 ```bash
