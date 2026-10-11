@@ -30,10 +30,11 @@ import { ReplMonitor } from './repl_monitor.js'
 import { getPkgIndexes, rawInstallPkg, fetchPkgReadme } from './package_mgr.js'
 import { ConnectionUID } from './connection_uid.js'
 import translations from '../build/translations.json'
-import { parseStackTrace, validatePython, disassembleMPY, minifyPython, prettifyPython, compilePython } from './python_utils.js'
+import { parseStackTrace, validatePython, disassembleMPY, minifyPython, prettifyPython, compilePython, reprStr } from './python_utils.js'
 import { SYSTEM_DIRS } from './emulator.js'
 import { createPyDevicesVM, enableSimulatorAudio, armSimulatorAudio, disarmSimulatorAudio } from './pydevices/runtime.js'
 import { showDeviceStage, hideDeviceStage, initDeviceStage, onDisplayResize, getDisplayConfig } from './pydevices/stage.js'
+import { resolveGalleryExample, rawStageGalleryExample } from './pydevices/gallery.js'
 import { getSetting, onSettingChange, updateSetting } from './settings.js'
 import { renderMarkdown } from './markdown.js'
 
@@ -592,6 +593,20 @@ async function completeDeviceInit() {
                 await _raw_loadFile(raw, '/main.py')
             } else if (fsCache.has('/code.py')) {
                 await _raw_loadFile(raw, '/code.py')
+            }
+        }
+
+        /* A gallery example that arrived before there was a device to put it
+           on. Opened last, so its tab is the one in front; its own failure
+           (a gallery that cannot be reached, a name that is not there) is
+           reported as its own and does not read as the device failing. */
+        if (pendingGalleryExample) {
+            const name = pendingGalleryExample
+            pendingGalleryExample = null
+            try {
+                await _raw_openGalleryExample(raw, name)
+            } catch (err) {
+                report(`Cannot open ${name}`, err)
             }
         }
         sessionInitialized = true
@@ -1865,7 +1880,16 @@ export async function runCurrentFile() {
     try {
         const emit = true
         await sleep(10)
-        await raw.exec(editor.state.doc.toString(), timeout, emit)
+        /* Run as the file it is, not as text pasted at the prompt. A program on
+           a board knows where it is - MicroPython sets __file__ when it runs
+           main.py or imports a module - and one that finds the modules beside
+           it that way (sys.path.insert(0, its folder)) only works if the run
+           says so too. The raw REPL names every block it runs "<stdin>", so the
+           name has to be set from inside the block; compiling under the real
+           name also puts it, with the right line numbers, in any traceback. */
+        const source = editor.state.doc.toString()
+        const asFile = `__file__ = ${reprStr(editorFn)}\nexec(compile(${reprStr(source)}, __file__, 'exec'))\n`
+        await raw.exec(asFile, timeout, emit)
     } catch (err) {
         if (err.message.includes('KeyboardInterrupt')) {
             // Interrupted manually
@@ -1985,6 +2009,71 @@ export async function installPkg(pkg, { version=null } = {}) {
 }
 
 /*
+ * Gallery examples
+ *
+ * ?example=<name> opens one card of the PyDevices gallery here: its files are
+ * written to whatever device is connected, with the entry file open in the
+ * editor, ready to run or edit. The resolution and the writing are in
+ * pydevices/gallery.js; this is the part that knows about the session.
+ */
+
+/* An example named before there was a device to put it on - by the link
+   that opened the app, or one followed into a window with nothing connected.
+   Taken by the next device that comes up, so it fires once. */
+let pendingGalleryExample = null
+
+async function _raw_openGalleryExample(raw, name) {
+    toastr.info(`Fetching ${name} from the gallery...`)
+    const plan = await resolveGalleryExample(name)
+
+    const clashes = plan.files.filter(f => fsCache.has(f.path))
+    if (clashes.length && !confirm(`${clashes.length} file(s) of ${name} already exist on the device:\n` +
+                                   clashes.slice(0, 5).map(f => '  ' + f.path).join('\n') +
+                                   (clashes.length > 5 ? '\n  ...' : '') + '\nOverwrite?')) {
+        return
+    }
+
+    await rawStageGalleryExample(raw, plan, { installPkg: _raw_installPkg })
+    for (const { path } of plan.files) {
+        /* As an upload does: the refresh below then reloads or flags a file
+           that is open in an editor, rather than leaving it stale */
+        fsCache.invalidate(path)
+    }
+    await _raw_updateFileTree(raw)
+    const [entryDir] = splitPath(plan.entry)
+    if (entryDir) { fileTreeView.expand('/' + entryDir) }
+    await _raw_loadFile(raw, plan.entry)
+    fileTreeSelect(plan.entry)
+    toastr.success(`${plan.files.length} file(s) written. Press Run to start it.`, `${name} is open`)
+    analytics.track('Gallery Example Opened', { name })
+}
+
+/*
+ * Opens a gallery example on the connected device, or parks it for the next
+ * one. `silent` skips the "connect a device" toast, for a link that is about
+ * to connect one itself.
+ */
+export async function openGalleryExample(name, { silent = false } = {}) {
+    if (!portReady()) {
+        pendingGalleryExample = name
+        if (!silent) {
+            toastr.info(`Connect the simulator or a board to open ${name} from the gallery`, 'Gallery example')
+        }
+        return false
+    }
+    const raw = await MpRawMode.begin(port)
+    try {
+        await _raw_openGalleryExample(raw, name)
+        return true
+    } catch (err) {
+        report(`Cannot open ${name}`, err)
+        return false
+    } finally {
+        try { await raw.end() } catch (_err) { /* device may have disconnected */ }
+    }
+}
+
+/*
  * The readme an install link points at, opened as a tab so the package can be
  * read while the install itself waits for a device. Nothing here touches a
  * board, and a package without a readme opens nothing.
@@ -2034,9 +2123,10 @@ async function startQuickInstall(pkg) {
 }
 
 /*
- * What a link means to a window that is already open. Only ?install= is acted
- * on: the connection params (?wss=, ?rtc=, ?vm=) would tear down whatever the
- * session is already talking to, which is not what following a link should do.
+ * What a link means to a window that is already open. Only ?install= and
+ * ?example= are acted on: the connection params (?wss=, ?rtc=, ?vm=) would
+ * tear down whatever the session is already talking to, which is not what
+ * following a link should do.
  */
 async function handleLaunchUrl(targetUrl) {
     let params
@@ -2049,6 +2139,10 @@ async function handleLaunchUrl(targetUrl) {
     const pkg = params.get('install')
     if (pkg) {
         await startQuickInstall(pkg)
+    }
+    const example = params.get('example')
+    if (example) {
+        await openGalleryExample(example)
     }
 }
 
@@ -2541,6 +2635,12 @@ function showOfflineReadyToast(version) {
         } catch (err) {
             report('Quick install failed', err)
         }
+    }
+
+    /* Nothing is connected this early, so the example waits for the device
+       the link connects (?vm=1) or the one the person picks */
+    if ((urlID = urlParams.get('example'))) {
+        await openGalleryExample(urlID, { silent: !!urlParams.get('vm') })
     }
 
     /* location.search has been acted on, so anything the launch queue hands
