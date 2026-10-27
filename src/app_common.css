@@ -152,12 +152,23 @@ button.reconnecting {
     animation: reconnecting-pulse 1.2s ease-in-out infinite;
 }
 
+/* The simulator or a board is coming up after a click on Connect */
+button.booting {
+    animation: reconnecting-pulse 1.2s ease-in-out infinite;
+}
+
+#boot-status {
+    font-size: 0.9rem;
+    opacity: 0.85;
+    white-space: nowrap;
+}
+
 @keyframes reconnecting-pulse {
     50% { opacity: 0.25; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    button.reconnecting {
+    button.reconnecting, button.booting {
         animation: none;
         opacity: 0.6;
     }
