@@ -6,12 +6,12 @@
  * This includes no assurances about being fit for any specific purpose.
  */
 
-import { MicroPythonWASM, SYSTEM_DIRS } from './transports/vm.js'
+import { MicroPythonWASM, SYSTEM_DIRS, visibleTree } from './transports/vm.js'
 import { loadVFS } from './python_utils.js'
 import { loadMicroPython } from '@micropython/micropython-webassembly-pyscript/micropython.mjs'
 import i18next from 'i18next'
 
-export { MicroPythonWASM, SYSTEM_DIRS }
+export { MicroPythonWASM, SYSTEM_DIRS, visibleTree }
 
 const T = i18next.t.bind(i18next)
 

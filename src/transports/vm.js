@@ -12,6 +12,16 @@ import { Transport } from './base.js'
 const PYEXEC_FORCED_EXIT = 0x100
 export const SYSTEM_DIRS = new Set(['/sys', '/dev', '/proc'])
 
+/* Top-level entries the runtime itself needs (the interpreter's /tmp and
+   /dev, the emulated home, the shim folder below) but that are not the user's
+   files. They stay on the device; the File Manager just does not list them. */
+export const HIDDEN_ROOTS = new Set(['/dev', '/home', '/proc', '/sys', '/tmp', '/.shim'])
+
+/** Drops the hidden top-level entries from a walkFs() tree. */
+export function visibleTree(tree) {
+    return tree.filter((n) => !HIDDEN_ROOTS.has(n.path))
+}
+
 const MACHINE_MODULE = `\
 def reset():
     raise SystemExit
@@ -99,6 +109,7 @@ export class MicroPythonWASM extends Transport {
         this._inRawMode = false
         this._suppressedOutput = false
         this._fsPopulated = false
+        this._shimDir = opts.shimDir || '/lib'
         this._decoder = new TextDecoder('utf-8')
         this._writeQueue = Promise.resolve()
         this.info = { type: opts.infoType || 'MicroPython WASM' }
@@ -135,9 +146,13 @@ export class MicroPythonWASM extends Transport {
             try { this.mp.FS.mkdir('/lib') } catch { /* exists */ }
         }
 
-        // Always ensure machine module is present
+        // Always ensure machine module is present. It lives in shimDir, which a
+        // runtime can point away from /lib so the user's lib/ starts empty.
         try { this.mp.FS.mkdir('/lib') } catch { /* exists */ }
-        this.mp.FS.writeFile('/lib/machine.py', MACHINE_MODULE)
+        if (this._shimDir !== '/lib') {
+            try { this.mp.FS.mkdir(this._shimDir) } catch { /* exists */ }
+        }
+        this.mp.FS.writeFile(this._shimDir + '/machine.py', MACHINE_MODULE)
 
         // Interpreter state - sys.path, environment, imports - does not survive
         // into the fresh VM a reset builds, so this runs for every one of them,
