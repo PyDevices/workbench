@@ -31,7 +31,7 @@ import { getPkgIndexes, rawInstallPkg, fetchPkgReadme } from './package_mgr.js'
 import { ConnectionUID } from './connection_uid.js'
 import translations from '../build/translations.json'
 import { parseStackTrace, validatePython, disassembleMPY, minifyPython, prettifyPython, compilePython, reprStr } from './python_utils.js'
-import { SYSTEM_DIRS } from './emulator.js'
+import { SYSTEM_DIRS, visibleTree } from './emulator.js'
 import { createPyDevicesVM, enableSimulatorAudio, armSimulatorAudio, disarmSimulatorAudio } from './pydevices/runtime.js'
 import { showDeviceStage, hideDeviceStage, initDeviceStage, onDisplayResize, getDisplayConfig } from './pydevices/stage.js'
 import { resolveGalleryExample, rawStageGalleryExample } from './pydevices/gallery.js'
@@ -1236,7 +1236,9 @@ async function _raw_updateFileTree(raw) {
         console.log(err)
     }
 
-    const fs_tree = await raw.walkFs()
+    /* The simulator's runtime keeps folders of its own; a real board's are all the user's */
+    const walked = await raw.walkFs()
+    const fs_tree = (connType === 'sim') ? visibleTree(walked) : walked
     const delta = fsCache.reconcileListing(fs_tree, isSpecialPath)
 
     _updateFileTree(fs_tree, fs_stats);

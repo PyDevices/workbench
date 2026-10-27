@@ -74,7 +74,7 @@ import os, sys
 # Absolute /lib, matching a board: the package manager finds the install
 # target by looking for a sys.path entry that ends with "/lib", and a
 # relative "lib" left it refusing to install anything on the simulator.
-sys.path[:] = [".", ".frozen", "/lib", "/utils"]
+sys.path[:] = [".", ".frozen", "/lib", "/utils", "/.shim"]
 from boarddev import env_set
 env_set("PYDEVICES_WIDTH", ${Number(width)})
 env_set("PYDEVICES_HEIGHT", ${Number(height)})
@@ -181,6 +181,8 @@ export function createPyDevicesVM(opts = {}) {
     const port = new MicroPythonWASM(loadPyDevicesMicroPython, {
         wasmURL: runtimeURL('micropython.wasm'),
         infoType: 'PyDevices Simulator',
+        // machine.py's home: on sys.path (see bootScript) but not in the user's lib/
+        shimDir: '/.shim',
         // The build is compiled with ASYNCIFY, so the VM can yield to the
         // browser instead of locking the tab up for the length of a sleep.
         asyncify: true,
