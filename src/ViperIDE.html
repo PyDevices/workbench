@@ -32,10 +32,10 @@
             <button title="Run File [F5]"        onclick="app.runCurrentFile()"  id="btn-run"><i class="fa-solid fa-circle-play" id="btn-run-icon"></i></button>
         </div>
         <div>
-            <button title="Simulator (virtual device)" onclick="app.connectDevice('sim')" id="btn-conn-sim"><i class="fa-solid fa-display"></i></button>
-            <button title="Connect WebREPL"      onclick="app.connectDevice('ws')"  id="btn-conn-ws" ><i class="fa-solid fa-link"></i></button>
-            <button title="Connect Bluetooth"    onclick="app.connectDevice('ble')" id="btn-conn-ble"><i class="fa-brands fa-bluetooth-b"></i></button>
-            <button title="Connect USB/Serial"   onclick="app.connectDevice('usb')" id="btn-conn-usb"><i class="fa-brands fa-usb"></i></button>
+            <button title="Simulator (virtual device)" onclick="app.connectDevice('sim')" id="btn-conn-sim" disabled><i class="fa-solid fa-display"></i></button>
+            <button title="Connect WebREPL"      onclick="app.connectDevice('ws')"  id="btn-conn-ws" disabled ><i class="fa-solid fa-link"></i></button>
+            <button title="Connect Bluetooth"    onclick="app.connectDevice('ble')" id="btn-conn-ble" disabled><i class="fa-brands fa-bluetooth-b"></i></button>
+            <button title="Connect USB/Serial"   onclick="app.connectDevice('usb')" id="btn-conn-usb" disabled><i class="fa-brands fa-usb"></i></button>
             <button title="Full Screen" onclick="app.toggleFullScreen('app')"  id="app-expand"><i class="fa-solid fa-expand"></i></button>
         </div>
     </div>

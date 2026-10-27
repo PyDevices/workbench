@@ -2606,6 +2606,12 @@ function showOfflineReadyToast(version) {
         openWelcomeTab()
     })
 
+    /* The connect buttons ship disabled: until this script has wired up the
+       terminal and the handlers, a click has nothing to act on. */
+    for (const t of ['sim', 'ws', 'ble', 'usb']) {
+        QID(`btn-conn-${t}`).disabled = false
+    }
+
     setTimeout(() => {
         document.body.classList.add('loaded')
     }, 100)
