@@ -1,7 +1,6 @@
-# Workbench Development
+# Contributing to Workbench
 
-This guide covers the common local development workflow for Workbench, a
-fork of [ViperIDE](https://github.com/vshymanskyy/ViperIDE).
+Workbench is a fork of [ViperIDE](https://github.com/vshymanskyy/ViperIDE). The fork's policy is in [How it works](docs/how-it-works/viperide-fork.md#the-fork-policy): PyDevices-specific code goes in new files, diffs to upstream files stay small, and generic improvements are sent upstream. A bug fix or a translation is a good first contribution. Issues go to <https://github.com/PyDevices/workbench/issues>.
 
 ## Prerequisites
 
@@ -20,7 +19,8 @@ npm install --include=dev
 |---|---|
 | `src/` | Browser application source, styles, workers, bundled HTML entry files, translations, and virtual filesystem assets |
 | `assets/` | Icons and images copied into the production build |
-| `docs/` | User and contributor documentation |
+| `docs/` | The documentation, starting at [docs/index.md](docs/index.md) |
+| `test/` | The protocol-level suite (`test/suites/`) and the browser suite (`test/browser/`) |
 | `packages/viper-tools/` | MicroPython helper package metadata and files |
 | `mcp/` | MCP server for controlling Workbench from an AI client |
 | `build.py` | Production build script used by GitHub Pages deployment |
@@ -105,7 +105,7 @@ Run ESLint directly:
 npx eslint
 ```
 
-The ESLint configuration ignores `build/`, `src/websocket_relay.cjs`, and `mcp/`.
+The ESLint configuration ignores `build/`, `src/websocket_relay.cjs`, `mcp/` and `assets/pydevices/`.
 
 ## Translations
 
@@ -141,7 +141,18 @@ npm start
 
 The server serves the built app, opens a browser window, and exposes MCP tools for IDE, terminal, file, package, and device operations.
 
-## Release Notes
+## Testing
+
+```sh
+npm test              # protocol-level suite (test/) - no browser, no hardware
+npm run test:browser  # browser-level suite (test/browser/) - drives the built app
+```
+
+`npm test` exercises `src/rawmode.js`, `src/transports/` and `src/package_mgr.js` directly against the stock MicroPython WASM VM; point it at real hardware with `VIPER_TEST_TARGET` (see [test/README.md](test/README.md)). It never touches the PyDevices runtime.
+
+`npm run test:browser` does: it drives the same `build/` output CI deploys with Playwright, connecting the simulator, running every example, resizing, resetting and installing a package. It's what catches PyDevices-runtime regressions the protocol suite can't see. Run `python3 build.py --skip-tests` first if `build/` is stale.
+
+## Releases
 
 Workbench has two independent release tracks (see `.github/workflows/`):
 
@@ -161,5 +172,7 @@ Workbench has two independent release tracks (see `.github/workflows/`):
   `python3 build.py --skip-tests`, and deploys `build/` to
   <https://pydevices.github.io/workbench/>. This is separate from, and more
   frequent than, either tagged release track above.
+
+Tags `v0.5.x` and `v0.6.x` predate the fork and are upstream ViperIDE's release history.
 
 Before release-oriented changes, verify both the root application build and any affected MCP package behavior.

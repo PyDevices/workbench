@@ -1,109 +1,41 @@
-# PyDevices Workbench
+![Workbench editing main.py with the file manager and terminal](docs/images/screenshot-desktop-chrome.png)
 
-**A MicroPython IDE for Web and Mobile — work with a built-in device simulator or a real board, in the same browser tab.**
+# Workbench
 
-Live at <https://pydevices.github.io/workbench/>.
+Workbench is a MicroPython IDE that runs in your browser, with a built-in simulator for MicroPython-compatible devices and the PyDevices libraries, and USB, Bluetooth and WebREPL connections to real boards. It's a fork of [ViperIDE](https://github.com/vshymanskyy/ViperIDE) by Volodymyr Shymanskyy (MIT license); [how the fork works](docs/how-it-works/viperide-fork.md).
 
-- **Simulator**: a MicroPython WebAssembly virtual device runs entirely in your browser — no hardware needed.
-- **Real boards**: connect over USB (Web Serial / WebUSB), Bluetooth, or WebREPL. File manager, package installer (`mip`), and REPL terminal all work the same on every device.
-- **Editor tooling**: CodeMirror with ruff linting/formatting, `.mpy` cross-compilation, and disassembly — all in-browser.
+## Open it
 
-Part of the [PyDevices](https://pydevices.github.io/) project: displays, widgets, and graphics for MicroPython.
+There's nothing to install: open <https://pydevices.github.io/workbench/>. A browser can also install it as an app (the install icon in Chrome or Edge's address bar). To run your own copy, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Built on ViperIDE
+## Try it
 
-Workbench is a fork of [ViperIDE](https://github.com/vshymanskyy/ViperIDE) by
-[Volodymyr Shymanskyy](https://github.com/vshymanskyy) (MIT license). If you find
-this useful, please star ViperIDE too — the connectivity, file manager, and
-editor tooling come from there. Fork policy: PyDevices-specific code lives in
-new files, diffs to upstream files stay minimal, and generic improvements are
-sent upstream.
+Press the simulator button, then type these lines at the `>>>` prompt:
 
-What this fork changes:
-
-- The virtual device is the PyDevices MicroPython WASM build, with the whole
-  PyDevices stack frozen in (lvgl, pdwidgets, pygraphics, palettes,
-  `displaydev`, the desktop `board_config` and the rest; nothing installs at
-  boot), reached from
-  its own toolbar button alongside USB/Bluetooth/WebREPL. It gets a real
-  display stage — resolution and shape presets including round watch faces,
-  live resize, audio, pointer and keyboard input — and boots with example
-  programs for each of those libraries already in its file tree.
-- PyDevices branding; no analytics (the Amplitude tracking from upstream is
-  removed).
-
-## Opening a gallery example
-
-Any card of the [PyDevices gallery](https://pydevices.github.io/pydevices-examples/gallery/)
-opens here by name:
-
-```
-https://pydevices.github.io/workbench/?vm=1&example=paint
+```python
+>>> from board_config import display_drv
+Initializing WasmDisplay...
+WasmDisplay: initialized.
+>>> import pygraphics as pg
+>>> from palettes import get_palette
+>>> pal = get_palette()
+>>> w, h = display_drv.width, display_drv.height
+>>> w, h
+(320, 240)
+>>> buf = bytearray(w * h * 2)
+>>> fb = pg.FrameBuffer(buf, w, h, pg.RGB565)
+>>> pg.fill(fb, pal.NAVY)
+Area(0, 0, 320, 240)
+>>> pg.circle(fb, w // 2, h // 2, 80, pal.CYAN)
+Area(80, 40, 160, 160)
+>>> display_drv.blit_rect(buf, 0, 0, w, h)
+(0, 0, 320, 240)
+>>> hex(fb.pixel(w // 2, h // 2 - 80))
+'0x7ff'
 ```
 
-That boots the simulator, writes the example's files to it and opens the
-entry file in the editor, ready for Run. Leave `vm=1` off and the example
-waits for whatever you connect next, so the same link puts it on a board
-over USB. A single-file example lands in the root next to `main.py`, with
-the modules it imports from beside itself; a package example goes under
-`/lib/<name>/`, where a `mip` install would put it; the helpers it uses from
-the examples repository's `lib/utils/` go in `/lib/`. Files it declares in a
-`# manifests:` header are installed through the package manager.
+A cyan circle appears on the navy display, and the last line reads back a pixel on its edge: `0x7ff` is `pal.CYAN`.
 
-## Development
+[Docs](https://github.com/PyDevices/workbench/blob/main/docs/index.md) · [Examples](https://pydevices.github.io/pydevices-examples/gallery/) · [Roadmap](ROADMAP.md)
 
-```bash
-npm install
-python3 build.py --skip-tests   # full build (lint/test skipped) into build/
-npm run start                   # watch server at http://localhost:10001
-```
-
-`python3 build.py --skip-tests` produces the deployable site in `build/`,
-including the MicroPython WASM assets (`micropython.wasm`, the
-`mpy-cross-*.wasm` binaries, `ruff_wasm_bg.wasm`) that the dev server needs to
-serve the simulator, `.mpy` compile and lint. `--prepare` on its own stops
-before that step — it only vendors dependencies (`npm install`,
-`python-minifier`, the virtual filesystem tarballs) so tools like `npm test`
-have what they need without a full build. `npm run start` reuses whatever is
-already in `build/`, so run the full build first (or after pulling changes
-that touch assets). Plain `python3 build.py` (no flags) also runs lint and
-tests before building. CI deploys `main` to GitHub Pages.
-
-### Testing
-
-```bash
-npm test              # protocol-level suite (test/) - no browser, no hardware
-npm run test:browser  # browser-level suite (test/browser/) - drives the built app
-```
-
-`npm test` exercises `src/rawmode.js`, `src/transports/` and
-`src/package_mgr.js` directly against the stock MicroPython WASM VM; point it
-at real hardware with `VIPER_TEST_TARGET` (see `test/README.md`). It never
-touches the PyDevices runtime. `npm run test:browser` does: it builds on the
-same `build/` output CI deploys and drives it with Playwright — connecting
-the simulator, running every example, resizing, resetting, installing a
-package — so it is what catches PyDevices-runtime regressions the protocol
-suite can't see. Run `python3 build.py --skip-tests` first if `build/` is
-stale.
-
-## Releases
-
-- Plain `vX.Y.Z` tags (e.g. `v1.2.0`) release the app itself: a GitHub Release
-  is created with the built `build/` bundle attached as a zip.
-- `mcp-v*` tags release only the MCP tool's npm artifact, from `mcp/`.
-- The inherited `v0.5.x`–`v0.6.x` tags predate the fork and are upstream
-  ViperIDE release history, not Workbench releases.
-
-## Support
-
-- Issues: <https://github.com/PyDevices/workbench/issues> (just enabled).
-- Browsers: board connectivity (Web Serial / WebUSB / Bluetooth) requires a
-  Chromium-based browser (Chrome, Edge, Opera, Brave, etc.) — not available on
-  Safari or iOS. The simulator has no such requirement and works in any
-  modern browser.
-
-What's planned next is in [ROADMAP.md](ROADMAP.md).
-
-## License
-
-[MIT](LICENSE), same as ViperIDE.
+Made by [PyDevices](https://pydevices.com).
