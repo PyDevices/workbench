@@ -491,6 +491,16 @@ function wirePort(new_port) {
     new_port.onDisconnect(handlePortDisconnect)
 }
 
+/* The "starting" sign: a spinner and a word beside the connect buttons, and
+   the clicked button pulsing. Cleared by the caller on success and failure. */
+function setBooting(on, type) {
+    QID('boot-status').hidden = !on
+    QID('boot-status-text').textContent = (type === 'sim') ? 'Starting simulator…' : 'Connecting…'
+    for (const t of ['sim', 'ws', 'ble', 'usb']) {
+        QID(`btn-conn-${t}`).classList.toggle('booting', on && t === type)
+    }
+}
+
 export async function connectDevice(type) {
     if (port) {
         const msg = (deviceState === 'reconnecting') ? 'Stop reconnecting and disconnect?'
@@ -500,12 +510,26 @@ export async function connectDevice(type) {
         return
     }
 
-    const new_port = await prepareNewPort(type)
-    if (!new_port) { return }
-    /* A ?vm=1 link arrives as type 'ws' but hands back the simulator; from
-       here on everything - connType, the stage, audio, the button highlight -
-       should treat it as what it is. */
-    if (new_port.isSimulator) { type = 'sim' }
+    /* Booting the simulator takes a while, and most of it is inside
+       prepareNewPort (requestAccess starts the VM): say so from the click
+       until the prompt is up, whether that ends in a session or an error.
+       Other connections only start once their picker has been answered. */
+    setBooting(type === 'sim', type)
+    try {
+        const new_port = await prepareNewPort(type)
+        if (!new_port) { return }
+        /* A ?vm=1 link arrives as type 'ws' but hands back the simulator; from
+           here on everything - connType, the stage, audio, the button highlight -
+           should treat it as what it is. */
+        if (new_port.isSimulator) { type = 'sim' }
+        setBooting(true, type)
+        await bringUpPort(new_port, type)
+    } finally {
+        setBooting(false)
+    }
+}
+
+async function bringUpPort(new_port, type) {
     // Connect new port
     try {
         await new_port.connect()
