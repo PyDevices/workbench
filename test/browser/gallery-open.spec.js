@@ -12,7 +12,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { terminalText, focusTerminal, distinctCanvasColors } from './helpers.js'
 
-const GALLERY = 'https://pydevices.github.io/pydevices-examples/gallery/'
+const GALLERY = 'https://pydevices.github.io/gallery/gallery/'
 const FIXTURES = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures', 'gallery')
 
 /* The app's service worker fetches on the page's behalf, and a request it

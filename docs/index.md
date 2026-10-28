@@ -35,4 +35,4 @@ Workbench is a MicroPython IDE for the browser, with a built-in device simulator
 
 - [Changelog](changelog.md)
 
-Also: [Examples gallery](https://pydevices.github.io/pydevices-examples/gallery/), [Roadmap](../ROADMAP.md), [Contributing](../CONTRIBUTING.md).
+Also: [Examples gallery](https://pydevices.github.io/gallery/gallery/), [Roadmap](../ROADMAP.md), [Contributing](../CONTRIBUTING.md).
