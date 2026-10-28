@@ -15,4 +15,4 @@ Edit the file and press Run again. To put the same program on a real board, conn
 
 The simulator also has a resolution and shape picker, including round watch faces, and you can resize the display by dragging it.
 
-More programs are in the [gallery](https://pydevices.github.io/pydevices-examples/gallery/); [open one in Workbench](../guides/open-a-gallery-example.md) by name.
+More programs are in the [gallery](https://pydevices.github.io/gallery/gallery/); [open one in Workbench](../guides/open-a-gallery-example.md) by name.

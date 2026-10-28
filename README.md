@@ -36,6 +36,6 @@ Area(80, 40, 160, 160)
 
 A cyan circle appears on the navy display, and the last line reads back a pixel on its edge: `0x7ff` is `pal.CYAN`.
 
-[Docs](https://github.com/PyDevices/workbench/blob/main/docs/index.md) · [Examples](https://pydevices.github.io/pydevices-examples/gallery/) · [Roadmap](ROADMAP.md)
+[Docs](https://github.com/PyDevices/workbench/blob/main/docs/index.md) · [Examples](https://pydevices.github.io/gallery/gallery/) · [Roadmap](ROADMAP.md)
 
 Made by [PyDevices](https://pydevices.com).
