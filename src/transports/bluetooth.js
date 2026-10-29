@@ -25,6 +25,9 @@ const CH9143_RX = '0000fff1-0000-1000-8000-00805f9b34fb'    // Notify
 const CH9143_CTRL = '0000fff3-0000-1000-8000-00805f9b34fb'  // Read / Write
 const CH9143_TX_LIMIT = 20
 
+/* How long a board gets to answer the empty line that opens a session */
+const LOGIN_ASK_MS = 1500
+
 function isFastNusDevice(deviceInfo) {
     const id = [
         deviceInfo?.machine,
@@ -190,6 +193,49 @@ export class WebBluetooth extends Transport {
 
         await this.rx.startNotifications()
         processStream()
+
+        if (this.service.uuid === NUS_SERVICE) {
+            await this._logIn()
+        }
+    }
+
+    onPasswordRequest(callback) {
+        this._passReqCallback = callback
+    }
+
+    /*
+     * A board serving its REPL with a password (bledev.repl, like WebREPL) takes
+     * the first line it is sent as the password. So before anything else is sent,
+     * ask with an empty line: such a board answers "Password:", and any other REPL
+     * just prints a prompt. A board that is pairing says nothing yet; it shows its
+     * prompt once the pairing settles.
+     */
+    async _logIn() {
+        const release = await this.startTransaction()
+        try {
+            await this.write('\r')
+            /* A hard deadline, unlike readUntil's: a running program that keeps
+               printing must not hold the connection up */
+            const deadline = Date.now() + LOGIN_ASK_MS
+            while (!/Password:|>>> /.test(this.receivedData) && Date.now() < deadline) {
+                await sleep(20)
+            }
+            if (!this.receivedData.includes('Password:')) {
+                return  // a REPL without a password, a busy board, or one still pairing
+            }
+            this.receivedData = ''
+            const pass = this._passReqCallback ? await this._passReqCallback() : null
+            if (!pass) {
+                throw new Error('Password is required')
+            }
+            await this.write(pass + '\r')
+            const rsp = await this.readUntil(['>>> ', 'Access denied'], 5000)
+            if (rsp.includes('Access denied')) {
+                throw new Error('Invalid password')
+            }
+        } finally {
+            release()
+        }
     }
 
     /*
