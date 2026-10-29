@@ -363,6 +363,7 @@ async function onPromptSettled() {
 
 let defaultWsURL = 'ws://192.168.1.123:8266'
 let defaultWsPass = ''
+let defaultBlePass = ''
 
 async function prepareNewPort(type) {
     let new_port;
@@ -446,6 +447,15 @@ async function prepareNewPort(type) {
             return
         }
         new_port = new WebBluetooth()
+        new_port.onPasswordRequest(async () => {
+            /* As for WebREPL: a board that dropped the link and came back asks
+               again, and it says if the remembered password is wrong */
+            if (deviceState === 'reconnecting' && defaultBlePass) { return defaultBlePass }
+            const pass = prompt('Bluetooth REPL password:', defaultBlePass)
+            if (pass == null) { return }
+            defaultBlePass = pass
+            return pass
+        })
     } else if (type === 'usb') {
         if (iOS) {
             toastr.error('WebSerial is not available on iOS')
