@@ -280,9 +280,49 @@ export class WebBluetooth extends Transport {
         await this._dropStream()
     }
 
-    async writeBytes(data) {
-        //await this.tx.writeValueWithoutResponse(data)
-        await this.tx.writeValue(data)
-        await sleep(1)
+    /*
+     * Web Bluetooth allows one GATT operation at a time on a link: a second
+     * writeValue() while one is in flight fails with "GATT operation already in
+     * progress", and the bytes are lost. Typing at the REPL calls write() for every
+     * key, so writes arrive while the last one is still on the air. They wait in
+     * a queue instead, and whatever is waiting when the link frees up goes out
+     * together, up to one characteristic's worth.
+     */
+    writeBytes(data) {
+        return new Promise((resolve, reject) => {
+            this._txQueue = this._txQueue || []
+            this._txQueue.push({ data, resolve, reject })
+            if (!this._txBusy) { this._drainTx() }
+        })
+    }
+
+    async _drainTx() {
+        this._txBusy = true
+        try {
+            while (this._txQueue.length) {
+                const limit = Math.max(1, this.writeChunk)
+                const batch = []
+                let size = 0
+                while (this._txQueue.length &&
+                       (batch.length === 0 || size + this._txQueue[0].data.byteLength <= limit)) {
+                    const item = this._txQueue.shift()
+                    batch.push(item)
+                    size += item.data.byteLength
+                }
+                const out = new Uint8Array(size)
+                let at = 0
+                for (const item of batch) { out.set(item.data, at); at += item.data.byteLength }
+                try {
+                    //await this.tx.writeValueWithoutResponse(out)
+                    await this.tx.writeValue(out)
+                    await sleep(1)
+                    for (const item of batch) { item.resolve() }
+                } catch (err) {
+                    for (const item of batch) { item.reject(err) }
+                }
+            }
+        } finally {
+            this._txBusy = false
+        }
     }
 }
