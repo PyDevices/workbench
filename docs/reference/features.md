@@ -28,6 +28,7 @@
   - Root FS stats display
 - **Package Manager**
   - Official `micropython-lib` index
+  - **Tools > Install omip.py on the device** puts `omip.py` on the connected board or the simulator, so it can run `omip.install("package")` itself, for OmniPython packages and what they need from `micropython-lib`
 - **MicroPython compiler**
   - Runs in-browser using WebAssembly
   - Instant syntax check in the editor

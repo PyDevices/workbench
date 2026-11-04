@@ -32,6 +32,7 @@ import { ConnectionUID } from './connection_uid.js'
 import translations from '../build/translations.json'
 import { parseStackTrace, validatePython, disassembleMPY, minifyPython, prettifyPython, compilePython, reprStr } from './python_utils.js'
 import { SYSTEM_DIRS, visibleTree } from './emulator.js'
+import { rawInstallOmip } from './pydevices/omip.js'
 import { createPyDevicesVM, enableSimulatorAudio, armSimulatorAudio, disarmSimulatorAudio } from './pydevices/runtime.js'
 import { showDeviceStage, hideDeviceStage, initDeviceStage, onDisplayResize, getDisplayConfig } from './pydevices/stage.js'
 import { resolveGalleryExample, rawStageGalleryExample } from './pydevices/gallery.js'
@@ -2026,14 +2027,25 @@ async function _raw_installPkg(raw, pkg, { version=null } = {}) {
     }
 }
 
-export async function installPkg(pkg, { version=null } = {}) {
+async function _raw_installOmip(raw) {
+    analytics.track('Package Install', { name: 'omip' })
+    toastr.info('Installing omip...')
+    await rawInstallOmip(raw, await _raw_ensureDevInfo(raw))
+    toastr.success('Installed omip.py. Try: import omip; omip.install("package")')
+}
+
+export async function installOmip() {
+    return await installPkg('omip', { rawInstall: _raw_installOmip })
+}
+
+export async function installPkg(pkg, { version=null, rawInstall=_raw_installPkg } = {}) {
     if (!portReady()) {
         toastr.info('Connect yout device first')
         return false
     }
     const raw = await MpRawMode.begin(port)
     try {
-        await _raw_installPkg(raw, pkg, { version })
+        await rawInstall(raw, pkg, { version })
         await _raw_updateFileTree(raw)
         return true
     } catch (err) {
