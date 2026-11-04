@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Brad Barnett
+#
+# SPDX-License-Identifier: MIT
 # LVGL: Smart Thermostat Dial (Round Watch UI)
 #
 # Switch the simulator's display shape to "round" to see this the way a

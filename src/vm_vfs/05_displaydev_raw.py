@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Brad Barnett
+#
+# SPDX-License-Identifier: MIT
 # displaydev: Low-Level Direct Display Driver
 from board_config import display_drv
 from palettes import get_palette

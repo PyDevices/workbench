@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Brad Barnett
+#
+# SPDX-License-Identifier: MIT
 # pygraphics: High-Performance Vector & FrameBuffer Graphics
 import math
 
