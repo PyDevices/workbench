@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Brad Barnett
+#
+# SPDX-License-Identifier: MIT
 # pdwidgets: Interactive Sensor Deck Dashboard
 import appdev
 import board_config

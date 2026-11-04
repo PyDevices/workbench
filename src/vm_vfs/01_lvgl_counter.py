@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Brad Barnett
+#
+# SPDX-License-Identifier: MIT
 # LVGL: Interactive Counter & Buttons
 #
 # The same lvgl bindings run on real hardware - only board_config differs.
