@@ -30,7 +30,9 @@ test('the Tools menu installs omip.py as source, with no index, and it imports',
 
     await focusTerminal(page)
     const before = await terminalText(page)
-    await page.keyboard.type('import omip, os; print("omip-ok", omip.__file__, omip.INDEX, "omip.mpy" in os.listdir("/lib"))')
+    // The runtime freezes its own omip, and sys.path lists the frozen modules
+    // before /lib. Put /lib first so this imports the file that was installed.
+    await page.keyboard.type('import sys, os; sys.path.insert(0, "/lib"); import omip; print("omip-ok", omip.__file__, omip.INDEX, "omip.mpy" in os.listdir("/lib"))')
     await page.keyboard.press('Enter')
     await expect
         .poll(async () => (await terminalText(page)).slice(before.length))
