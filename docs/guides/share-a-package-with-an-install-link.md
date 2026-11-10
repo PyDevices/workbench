@@ -4,13 +4,13 @@ A link to Workbench can install your library or project onto whatever board the 
 
 For instance, this installs [`aiodns`](https://github.com/vshymanskyy/aiodns):
 
-[<img src="https://raw.githubusercontent.com/vshymanskyy/ViperIDE/refs/heads/main/assets/btn_install.png" alt="Install using Workbench" height="48"/>](https://pydevices.github.io/workbench/?install=github:vshymanskyy/aiodns)
+[<img src="https://raw.githubusercontent.com/vshymanskyy/ViperIDE/refs/heads/main/assets/btn_install.png" alt="Install using Workbench" height="48"/>](https://workbench.pydevices.com/?install=github:vshymanskyy/aiodns)
 
 The image is served from ViperIDE's repository.
 
 ## Make the link
 
-Use `https://pydevices.github.io/workbench/?install=YOUR_LINK`. `YOUR_LINK` is one of:
+Use `https://workbench.pydevices.com/?install=YOUR_LINK`. `YOUR_LINK` is one of:
 
 - `github:org/repo`
 - `github:org/repo/path/to/package.json`
@@ -35,6 +35,6 @@ Links in the readme are shown but can't be clicked, because a readme isn't allow
 ## Add the button to your README
 
 ```md
-[<img src="https://raw.githubusercontent.com/vshymanskyy/ViperIDE/refs/heads/main/assets/btn_install.png" alt="Install using Workbench" height="48"/>](https://pydevices.github.io/workbench/?install=YOUR_LINK)
+[<img src="https://raw.githubusercontent.com/vshymanskyy/ViperIDE/refs/heads/main/assets/btn_install.png" alt="Install using Workbench" height="48"/>](https://workbench.pydevices.com/?install=YOUR_LINK)
 ```
 

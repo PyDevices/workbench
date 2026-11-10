@@ -1,9 +1,9 @@
 # Open a gallery example
 
-Any card of the [PyDevices gallery](https://pydevices.github.io/gallery/gallery/) opens in Workbench by name:
+Any card of the [PyDevices gallery](https://gallery.omnipython.org/) opens in Workbench by name:
 
 ```
-https://pydevices.github.io/workbench/?vm=1&example=paint
+https://workbench.pydevices.com/?vm=1&example=paint
 ```
 
 That starts the simulator, writes the example's files to it and opens the entry file in the editor, ready for Run.

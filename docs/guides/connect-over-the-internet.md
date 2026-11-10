@@ -2,7 +2,7 @@
 
 A secure WebSocket relay lets you reach a board from anywhere. This is experimental and may have bugs.
 
-1. Connect [Workbench](https://pydevices.github.io/workbench/) to the board over USB ([how](connect-over-usb.md)).
+1. Connect [Workbench](https://workbench.pydevices.com/) to the board over USB ([how](connect-over-usb.md)).
 2. In the left panel, open `Package Manager` and install `viper-tools`.
 3. Put this in the board's `main.py`:
 
@@ -23,7 +23,7 @@ A secure WebSocket relay lets you reach a board from anywhere. This is experimen
    IDE available on https://viper-ide.org?wss=YOUR-DEVICE-UID
    ```
 
-5. Open `https://pydevices.github.io/workbench/?wss=YOUR-DEVICE-UID` with the ID from that line. The link the board prints opens ViperIDE, because `viper-tools` comes from there.
+5. Open `https://workbench.pydevices.com/?wss=YOUR-DEVICE-UID` with the ID from that line. The link the board prints opens ViperIDE, because `viper-tools` comes from there.
 
 ## Use your own relay
 

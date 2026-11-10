@@ -7,8 +7,8 @@
   - [`WebREPL over internet 🌎`](../guides/connect-over-the-internet.md)
   - [`WebREPL in local network`](../guides/connect-over-your-network.md)
   - [`Bluetooth LE`](../guides/connect-over-bluetooth.md)
-  - [`P2P/WebRTC Bridge`](https://pydevices.github.io/workbench/bridge.html)
-  - [`Virtual Device`](https://pydevices.github.io/workbench/?vm=1), also on its own simulator toolbar button
+  - [`P2P/WebRTC Bridge`](https://workbench.pydevices.com/bridge.html)
+  - [`Virtual Device`](https://workbench.pydevices.com/?vm=1), also on its own simulator toolbar button
 - **File Editor**
   - Syntax highlighting for `.py`, `.json`, `.inf`, `.toml`, `.pem`
   - Auto expand/minify of `.json` files

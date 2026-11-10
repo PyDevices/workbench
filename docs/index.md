@@ -1,6 +1,6 @@
 # Workbench
 
-Workbench is a MicroPython IDE for the browser, with a built-in device simulator. Live at <https://pydevices.github.io/workbench/>.
+Workbench is a MicroPython IDE for the browser, with a built-in device simulator. Live at <https://workbench.pydevices.com/>.
 
 ## Get started
 
@@ -35,4 +35,4 @@ Workbench is a MicroPython IDE for the browser, with a built-in device simulator
 
 - [Changelog](changelog.md)
 
-Also: [Examples gallery](https://pydevices.github.io/gallery/gallery/), [Roadmap](../ROADMAP.md), [Contributing](../CONTRIBUTING.md).
+Also: [Examples gallery](https://gallery.omnipython.org/), [Roadmap](../ROADMAP.md), [Contributing](../CONTRIBUTING.md).
