@@ -6,7 +6,7 @@ Workbench is a MicroPython IDE that runs in your browser, with a built-in simula
 
 ## Open it
 
-There's nothing to install: open <https://pydevices.github.io/workbench/>. A browser can also install it as an app (the install icon in Chrome or Edge's address bar). To run your own copy, see [CONTRIBUTING.md](CONTRIBUTING.md).
+There's nothing to install: open <https://workbench.pydevices.com/>. A browser can also install it as an app (the install icon in Chrome or Edge's address bar). To run your own copy, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Try it
 
@@ -36,6 +36,6 @@ Area(80, 40, 160, 160)
 
 A cyan circle appears on the navy display, and the last line reads back a pixel on its edge: `0x7ff` is `pal.CYAN`.
 
-[Docs](https://github.com/PyDevices/workbench/blob/main/docs/index.md) · [Examples](https://pydevices.github.io/gallery/gallery/) · [Roadmap](ROADMAP.md)
+[Docs](https://github.com/PyDevices/workbench/blob/main/docs/index.md) · [Examples](https://gallery.omnipython.org/) · [Roadmap](ROADMAP.md)
 
 Made by [PyDevices](https://pydevices.com).

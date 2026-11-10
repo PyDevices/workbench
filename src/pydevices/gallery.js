@@ -27,7 +27,7 @@
 
 import { fetchJSON, fetchText, splitPath } from '../utils.js'
 
-export const GALLERY_URL = 'https://pydevices.github.io/gallery/gallery/'
+export const GALLERY_URL = 'https://gallery.omnipython.org/'
 
 /* How many lines the gallery scans for its `# key: a, b` headers */
 const HEADER_LINES = 10

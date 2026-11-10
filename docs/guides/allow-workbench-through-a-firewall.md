@@ -2,7 +2,7 @@
 
 If you manage a network, unblock these domains so Workbench works:
 
-- `pydevices.github.io`: Workbench itself, served from GitHub Pages.
+- `workbench.pydevices.com`: Workbench itself, served from GitHub Pages.
 - `hub.viper-ide.org`: the relay that [connecting over the internet](connect-over-the-internet.md) uses, inherited from upstream ViperIDE.
 - `micropython.org`: the MicroPython package index the package manager reads.
 - `raw.githubusercontent.com`: packages installed from GitHub.
