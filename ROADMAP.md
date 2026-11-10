@@ -5,5 +5,5 @@ an [issue](https://github.com/PyDevices/workbench/issues).
 
 ## Next
 
-- Workbench moves to its own address on the PyDevices domain, beside the
+- Workbench moves to its own address, workbench.pydevices.com, beside the
   site, the docs, the package index and the examples.
