@@ -4,7 +4,7 @@ The board runs a web server and Workbench connects to it over WebREPL. Your comp
 
 The WebSocket this uses isn't encrypted, and a secure site like Workbench can't open one. To get around that, the board serves a small page over plain HTTP, and that page loads the IDE from `viper-ide.org`, which is ViperIDE's site, not Workbench's. To reach a board over the internet instead, use [a relay](connect-over-the-internet.md).
 
-1. Connect [Workbench](https://pydevices.github.io/workbench/) to the board over USB ([how](connect-over-usb.md)).
+1. Connect [Workbench](https://workbench.pydevices.com/) to the board over USB ([how](connect-over-usb.md)).
 2. In the left panel, open `Package Manager` and install `viper-tools`.
 3. Put this in the board's `main.py`:
 

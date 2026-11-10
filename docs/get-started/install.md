@@ -1,6 +1,6 @@
 # Open Workbench
 
-There's nothing to install. Open <https://pydevices.github.io/workbench/> in a browser and the editor, file manager, terminal and simulator are all there.
+There's nothing to install. Open <https://workbench.pydevices.com/> in a browser and the editor, file manager, terminal and simulator are all there.
 
 ## Install it as an app
 

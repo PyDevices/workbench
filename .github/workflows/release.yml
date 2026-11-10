@@ -41,7 +41,7 @@ jobs:
           fi
       - name: Build the app
         env:
-          VIPER_IDE_BASE_URL: https://pydevices.github.io/workbench
+          VIPER_IDE_BASE_URL: https://workbench.pydevices.com
         run: |
           npm ci
           python3 build.py --skip-tests
