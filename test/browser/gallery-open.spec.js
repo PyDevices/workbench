@@ -142,6 +142,20 @@ test('a package example lands under /lib with the helpers it imports, and runs',
     expect(await output()).not.toContain('Traceback')
 })
 
+test('a package entry runs with its folder on the path, so the siblings it names import', async ({ page }) => {
+    await serveGallery(page)
+    await page.goto('/?vm=1&example=sibling_pack')
+    await waitForPrompt(page)
+
+    await expect(activeTab(page)).toHaveText('sibling_pack.py', { timeout: 20_000 })
+    expect(await listDir(page, '/lib/sibling_pack'))
+        .toBe("['__init__.py', 'sibling_colors.py', 'sibling_pack.py']")
+
+    const output = await run(page)
+    await expect(page.locator('#xterm')).toContainText('sibling_pack ran with 3 colors', { timeout: 20_000 })
+    expect(await output()).not.toContain('Traceback')
+})
+
 test('a module beside the entry comes with it, and __file__ lets the entry find it', async ({ page }) => {
     await serveGallery(page)
     await page.goto('/?vm=1&example=calc_lvgl')
