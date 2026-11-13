@@ -1925,7 +1925,16 @@ export async function runCurrentFile() {
            name has to be set from inside the block; compiling under the real
            name also puts it, with the right line numbers, in any traceback. */
         const source = editor.state.doc.toString()
-        const asFile = `__file__ = ${reprStr(editorFn)}\nexec(compile(${reprStr(source)}, __file__, 'exec'))\n`
+        /* A script's own folder is on the path when it runs, as it is for
+           `python file.py` on a computer: a file of a package (a gallery
+           example under /lib/<name>/) then finds its siblings, which the
+           package's __init__ would otherwise have put there. The root is
+           left alone, as it is already searched. */
+        const [runDir] = splitPath(editorFn)
+        const onPath = runDir
+            ? `import sys\nif ${reprStr('/' + runDir)} not in sys.path: sys.path.insert(0, ${reprStr('/' + runDir)})\n`
+            : ''
+        const asFile = `${onPath}__file__ = ${reprStr(editorFn)}\nexec(compile(${reprStr(source)}, __file__, 'exec'))\n`
         await raw.exec(asFile, timeout, emit)
     } catch (err) {
         if (err.message.includes('KeyboardInterrupt')) {
