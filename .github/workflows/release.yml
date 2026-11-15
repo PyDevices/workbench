@@ -51,6 +51,9 @@ jobs:
           TAG: ${{ inputs.tag || github.ref_name }}
         run: |
           (cd build && zip -qr "../workbench-$TAG.zip" .)
+          # A dev or rc tag is a pre-release, so the latest release stays the last final.
+          pre=""
+          case "$TAG" in *.dev*|*rc*) pre="--prerelease" ;; esac
           gh release view "$TAG" >/dev/null 2>&1 || \
-            gh release create "$TAG" --title "$TAG" --generate-notes
+            gh release create "$TAG" --title "$TAG" --generate-notes $pre
           gh release upload "$TAG" "workbench-$TAG.zip" --clobber
