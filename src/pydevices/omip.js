@@ -12,7 +12,7 @@ import { rawInstallPkg } from '../package_mgr.js'
 
 const OMIP_PACKAGE = {
     name: 'omip',
-    urls: [['omip.py', 'github:PyDevices/pydevices/lib/omip.py']],
+    urls: [['omip.py', 'github:PyDevices/omnipython/lib/omip.py']],
 }
 
 export async function rawInstallOmip(raw, dev) {
