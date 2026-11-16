@@ -76,6 +76,9 @@ import os, sys
 # relative "lib" left it refusing to install anything on the simulator.
 sys.path[:] = [".", ".frozen", "/lib", "/utils", "/.shim"]
 from boarddev import env_set
+# The runtime builds before the rename read PYDEVICES_*, later ones OMNIPYTHON_*.
+env_set("PYDEVICES_WIDTH", ${Number(width)})
+env_set("PYDEVICES_HEIGHT", ${Number(height)})
 env_set("OMNIPYTHON_WIDTH", ${Number(width)})
 env_set("OMNIPYTHON_HEIGHT", ${Number(height)})
 os.chdir("/")
