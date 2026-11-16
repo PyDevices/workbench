@@ -12,7 +12,7 @@ test('audio enables itself once a program registers a display', async ({ page })
     await runFile(page, '00_touch_paint.py')
 
     await expect
-        .poll(() => page.evaluate(() => globalThis.Module?.pydevicesBridge?.permissions()?.audio ?? false), {
+        .poll(() => page.evaluate(() => globalThis.Module?.omnipythonBridge?.permissions()?.audio ?? false), {
             timeout: 10_000,
         })
         .toBe(true)
@@ -38,7 +38,7 @@ test('audio re-enables on the new bridge after a reset', async ({ page }) => {
     await runFile(page, '00_touch_paint.py')
 
     await expect
-        .poll(() => page.evaluate(() => globalThis.Module?.pydevicesBridge?.permissions()?.audio ?? false), {
+        .poll(() => page.evaluate(() => globalThis.Module?.omnipythonBridge?.permissions()?.audio ?? false), {
             timeout: 10_000,
         })
         .toBe(true)

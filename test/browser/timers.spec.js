@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 //
 // multimer's timers on the PyDevices runtime are woken by the page's own
-// loop and dispatched through the wasm bridge (pydevices_timer_dispatch).
+// loop and dispatched through the wasm bridge (omnipython_timer_dispatch).
 // A runtime whose bridge declares external_call_depth_dec() with the wrong
 // signature boots, paints and answers the REPL, then throws "function
 // signature mismatch" on every timer callback; this is the test that sees it.
