@@ -1,6 +1,6 @@
 # Run your first program
 
-You can do this without a board. Workbench starts a MicroPython virtual device in your browser, with a display, the PyDevices libraries and example programs already on its file system.
+You can do this without a board. Workbench starts a MicroPython virtual device in your browser, with a display, the OmniPython libraries and example programs already on its file system.
 
 1. Open <https://workbench.pydevices.com/> and press the simulator button in the toolbar. The terminal prints a `>>>` prompt when the device is up.
 2. Click `04_pygraphics_shapes.py` in the file tree and press Run (or F5). The shapes appear on the display next to the editor, and the terminal prints `Rendered pygraphics vector FrameBuffer successfully to display!`.

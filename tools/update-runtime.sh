@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Refresh the vendored PyDevices MicroPython WASM runtime.
+# Refresh the vendored OmniPython MicroPython WASM runtime.
 #
-# The runtime is the PyDevices build of MicroPython: displaydev canvas output,
+# The runtime is the OmniPython build of MicroPython: displaydev canvas output,
 # pointer/keyboard input, audio, and lvgl/pdwidgets/pygraphics/palettes frozen
 # in. It is vendored here (rather than fetched during the build) so builds are
 # reproducible and work offline.
