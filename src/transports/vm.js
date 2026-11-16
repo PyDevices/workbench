@@ -187,7 +187,7 @@ export class MicroPythonWASM extends Transport {
          * of them first, on builds that offer a way to.
          */
         try {
-            globalThis.Module?.pydevicesBridge?.shutdown?.()
+            globalThis.Module?.omnipythonBridge?.shutdown?.()
         } catch (err) {
             console.warn('Runtime teardown failed:', err)
         }
