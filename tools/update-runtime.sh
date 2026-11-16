@@ -6,7 +6,7 @@
 # in. It is vendored here (rather than fetched during the build) so builds are
 # reproducible and work offline.
 #
-# Source of truth: https://pydevices.github.io/vendor/micropython/
+# Source of truth: https://omnipython.org/vendor/micropython/
 # Usage: tools/update-runtime.sh [path-to-local-vendor-dir]
 
 set -euo pipefail
@@ -22,7 +22,7 @@ if [ $# -ge 1 ]; then
         chmod 644 "$dest/$f"
     done
 else
-    base="https://pydevices.github.io/vendor/micropython"
+    base="https://omnipython.org/vendor/micropython"
     echo "Downloading runtime from $base"
     for f in micropython.mjs micropython.wasm; do
         curl -fsSL "$base/$f" -o "$dest/$f.tmp"

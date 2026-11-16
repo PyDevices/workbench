@@ -1,6 +1,6 @@
 # Gallery fixtures
 
-A stand-in for <https://pydevices.github.io/gallery/gallery/>, laid
+A stand-in for <https://gallery.omnipython.org/>, laid
 out the way the site is: `python-files.json` lists every example and helper
 file, examples live under `lib/examples/` and helpers under `lib/utils/`.
 `gallery-open.spec.js` serves it at the gallery's own address.

@@ -33,7 +33,7 @@ Workbench loads its WebAssembly runtimes, virtual filesystem archives and `manif
 - In JavaScript, as the `VIPER_IDE_BASE_URL` constant (replaced by Rollup)
 - In HTML, as the `${VIPER_IDE_BASE_URL}` placeholder (replaced while copying the files into `build/`)
 
-`build.py` defaults it to `http://localhost:10001` and passes it on to Rollup. The `static.yml` and `release.yml` CI workflows both set `VIPER_IDE_BASE_URL=https://pydevices.github.io/workbench` explicitly for production builds (`static.yml` for the GitHub Pages deploy on every push to `main`, `release.yml` for the bundle attached to a tagged release).
+`build.py` defaults it to `http://localhost:10001` and passes it on to Rollup. The `static.yml` and `release.yml` CI workflows both set `VIPER_IDE_BASE_URL=https://workbench.pydevices.com` explicitly for production builds (`static.yml` for the GitHub Pages deploy on every push to `main`, `release.yml` for the bundle attached to a tagged release).
 
 **To override it manually, set `VIPER_IDE_BASE_URL`:**
 
@@ -158,7 +158,7 @@ Workbench has two independent release tracks (see `.github/workflows/`):
 
 - **App releases**: pushing a plain `vX.Y.Z` tag (matching `v[0-9]*`) triggers
   `release.yml`, which builds the app with
-  `VIPER_IDE_BASE_URL=https://pydevices.github.io/workbench` via
+  `VIPER_IDE_BASE_URL=https://workbench.pydevices.com` via
   `python3 build.py --skip-tests`, zips `build/`, and attaches it to a GitHub
   Release for that tag. It first refuses to run against a pre-fork tree (a
   `package.json` name that isn't Workbench's), since the `v0.5.x`-`v0.6.x`
@@ -170,7 +170,7 @@ Workbench has two independent release tracks (see `.github/workflows/`):
 - **GitHub Pages**: every push to `main` runs `static.yml`, which builds with
   `python3 build.py --prepare && npm run lint && npm run test`, then
   `python3 build.py --skip-tests`, and deploys `build/` to
-  <https://pydevices.github.io/workbench/>. This is separate from, and more
+  <https://workbench.pydevices.com/>. This is separate from, and more
   frequent than, either tagged release track above.
 
 Tags `v0.5.x` and `v0.6.x` predate the fork and are upstream ViperIDE's release history.
