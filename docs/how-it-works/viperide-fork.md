@@ -4,7 +4,7 @@ Workbench is a fork of [ViperIDE](https://github.com/vshymanskyy/ViperIDE) by [V
 
 ## What this fork changes
 
-- The virtual device is the PyDevices MicroPython WebAssembly build with the whole PyDevices stack frozen in, reached from its own toolbar button beside USB, Bluetooth and WebREPL. It has a display stage with resolution and shape presets (round watch faces included), live resize, audio, and pointer and keyboard input.
+- The virtual device is the OmniPython MicroPython WebAssembly build with the whole OmniPython stack frozen in, reached from its own toolbar button beside USB, Bluetooth and WebREPL. It has a display stage with resolution and shape presets (round watch faces included), live resize, audio, and pointer and keyboard input.
 - It boots with example programs for each of those libraries.
 - Gallery examples open by name with `?example=`. See [Open a gallery example](../guides/open-a-gallery-example.md).
 - PyDevices branding, and no analytics. The Amplitude tracking in upstream is removed; the calls remain as empty stubs so merges from ViperIDE stay small.

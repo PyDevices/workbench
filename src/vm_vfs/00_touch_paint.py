@@ -8,7 +8,7 @@ Everything here works on a real board too: the same board_config, the same
 display driver, the same events. Connect hardware over USB, copy this file
 across, and it runs unchanged.
 
-Only needs the PyDevices stack, which the simulator has frozen in.
+Only needs the OmniPython stack, which the simulator has frozen in.
 """
 
 import board_config

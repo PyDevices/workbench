@@ -2,7 +2,7 @@
 //
 // The PyDevices stack is frozen into the WASM runtime, so connecting the
 // simulator installs nothing: no request to any mip index while it boots.
-// Boot used to mip-install pydevices-desktop on every connect; this keeps
+// Boot used to mip-install omnipython-desktop on every connect; this keeps
 // that from coming back unnoticed.
 import { test, expect } from '@playwright/test'
 import { connectSimulator, focusTerminal, terminalText } from './helpers.js'

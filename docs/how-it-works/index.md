@@ -8,7 +8,7 @@ Workbench is a MicroPython IDE that runs entirely in a browser tab: no server, n
 
 **The connection.** Workbench speaks MicroPython's raw REPL protocol to a board through one of several transports: Web Serial or WebUSB, Web Bluetooth, WebSocket (WebREPL, directly or through a relay), or a WebRTC peer. The transports live in `src/transports/`, the protocol in `src/rawmode.js`. Everything above them (file manager, package manager, terminal) is the same on every transport.
 
-**The simulator.** One of the transports is a MicroPython WebAssembly build running in the page. To the rest of Workbench it looks like a board. This fork's build has the PyDevices libraries frozen in (lvgl, pdwidgets, pygraphics, palettes, `displaydev` and a desktop `board_config`), so nothing installs at boot. Its display is a canvas next to the editor that accepts pointer and keyboard input and plays audio. Six example programs, one per library, are in its file tree when it starts.
+**The simulator.** One of the transports is a MicroPython WebAssembly build running in the page. To the rest of Workbench it looks like a board. This fork's build has the OmniPython libraries frozen in (lvgl, pdwidgets, pygraphics, palettes, `displaydev` and a desktop `board_config`), so nothing installs at boot. Its display is a canvas next to the editor that accepts pointer and keyboard input and plays audio. Six example programs, one per library, are in its file tree when it starts.
 
 ## Where code runs
 

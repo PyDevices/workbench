@@ -1783,14 +1783,14 @@ async function openWelcomeTab() {
 [![GitHub issues](https://img.shields.io/github/issues-raw/PyDevices/workbench?style=flat-square&label=issues&color=green)](https://github.com/PyDevices/workbench/issues)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/PyDevices/workbench)
 
-A MicroPython device workbench for [PyDevices](https://omnipython.org/):
+A MicroPython device workbench for [OmniPython](https://omnipython.org/):
 displays, widgets and graphics, in the browser or on real hardware.
 
 ## No board? Start with the simulator
 
 Click **Simulator** in the toolbar above. It boots a real display and file
 system right in this tab - no install, no wiring. The file tree opens with
-six ready-to-run examples covering the display, touch and each PyDevices
+six ready-to-run examples covering the display, touch and each OmniPython
 library:
 
 - \`00_touch_paint.py\` - a paint program you drag on with the mouse or a finger
@@ -1809,7 +1809,7 @@ different button.
 
 ## More
 
-- [PyDevices](https://omnipython.org/) — displays, widgets and graphics for MicroPython
+- [OmniPython](https://omnipython.org/) — displays, widgets and graphics for MicroPython
 - [Workbench README](https://github.com/PyDevices/workbench/blob/main/README.md)
 - Built on [ViperIDE](https://github.com/vshymanskyy/ViperIDE) by Volodymyr Shymanskyy — [features](https://github.com/vshymanskyy/ViperIDE/blob/main/docs/Features.md) and [docs](https://github.com/vshymanskyy/ViperIDE/tree/main/docs)
 

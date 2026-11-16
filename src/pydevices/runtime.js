@@ -2,7 +2,7 @@
  * SPDX-FileCopyrightText: 2026 PyDevices
  * SPDX-License-Identifier: MIT
  *
- * The PyDevices MicroPython WASM runtime as a Workbench device.
+ * The OmniPython MicroPython WASM runtime as a Workbench device.
  *
  * This is the same build the PyDevices simulator runs: displaydev paints onto a
  * canvas, pointer/keyboard events are fed back to Python, and lvgl, pdwidgets,
@@ -87,7 +87,7 @@ function getDefaultMainPy() {
 # PyDevices Workbench - virtual device
 # Read more: https://github.com/PyDevices/workbench
 
-# This is the PyDevices MicroPython build running in your browser through
+# This is the OmniPython MicroPython build running in your browser through
 # WebAssembly. The display below is a real framebuffer: draw to it exactly as
 # you would on a board, then plug in hardware and run the same code there.
 
