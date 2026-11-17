@@ -14,6 +14,6 @@ The simulator runs in any modern browser. Connecting a real board over USB or Bl
 
 ## Run it yourself
 
-To serve your own copy, see [CONTRIBUTING.md](../../CONTRIBUTING.md).
+To serve your own copy, see [CONTRIBUTING.md](https://github.com/PyDevices/workbench/blob/main/CONTRIBUTING.md).
 
 Next: [Run your first program](first-program.md).

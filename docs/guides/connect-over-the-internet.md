@@ -19,7 +19,7 @@ A secure WebSocket relay lets you reach a board from anywhere. This is experimen
    The board builds its ID from its hardware ID, so it stays the same across boots. If the board has no hardware ID, it makes a random one and keeps it in `.viper.json`. To use a fixed ID, call `wss_repl.start(uid='YOUR-DEVICE-UID')`.
 4. Reset the board. The terminal shows a line like this:
 
-   ```log
+   ```text
    IDE available on https://viper-ide.org?wss=YOUR-DEVICE-UID
    ```
 

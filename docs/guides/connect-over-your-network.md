@@ -20,7 +20,7 @@ The WebSocket this uses isn't encrypted, and a secure site like Workbench can't 
 
 4. Reset the board. The terminal shows a line like this:
 
-   ```log
+   ```text
    WebREPL server started on http://192.168.1.123:8266/
    ```
 
