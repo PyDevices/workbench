@@ -1,8 +1,8 @@
-![Workbench editing main.py with the file manager and terminal](docs/images/screenshot-desktop-chrome.png)
+![PyDevices Workbench editing main.py with the file manager and terminal](docs/images/screenshot-desktop-chrome.png)
 
-# Workbench
+# PyDevices Workbench
 
-Workbench is a MicroPython IDE that runs in your browser, with a built-in simulator for MicroPython-compatible devices and the OmniPython libraries, and USB, Bluetooth and WebREPL connections to real boards. It's a fork of [ViperIDE](https://github.com/vshymanskyy/ViperIDE) by Volodymyr Shymanskyy (MIT license); [how the fork works](docs/how-it-works/viperide-fork.md).
+PyDevices Workbench is a MicroPython IDE that runs in your browser, with a built-in simulator for MicroPython-compatible devices and the OmniPython libraries, and USB, Bluetooth and WebREPL connections to real boards. It's a fork of [ViperIDE](https://github.com/vshymanskyy/ViperIDE) by Volodymyr Shymanskyy (MIT license); [how the fork works](docs/how-it-works/viperide-fork.md).
 
 ## Open it
 

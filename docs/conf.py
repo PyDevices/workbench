@@ -12,7 +12,7 @@ so there is no API reference to generate.
 from omnipython_docs import configure
 
 globals().update(configure(
-    "Workbench", __file__,
+    "PyDevices Workbench", __file__,
     repo="PyDevices/workbench", edit_path="docs",
     version_file=None,
 ))
