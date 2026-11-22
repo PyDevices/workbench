@@ -1,10 +1,10 @@
 {
   "binary": {
     "name": "micropython.wasm",
-    "sha256": "2d047580078b9dae36cf08aa2149f4d21952d133d24242528a4f1381a13bc36f",
+    "sha256": "759f6028d2495f26f1f53dfb6e6e1aa41ff7471ef3b3e97c4cf75864ee96bab0",
     "size": 10014878
   },
-  "built_by": "https://github.com/PyDevices/omnipython-builds/actions/runs/45011031669",
+  "built_by": "https://github.com/PyDevices/omnipython-builds/actions/runs/45015969119",
   "format": 1,
   "install_only": false,
   "modules": "all,pdwidgets",
@@ -91,9 +91,9 @@
   "port": "webassembly",
   "sources": {
     "audiocomponents": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "audiodsp": {
       "describe": "015c288600bb",
@@ -101,82 +101,82 @@
       "head": "015c288600bbb1d58b68486bd24d58c88b0b96d7"
     },
     "audioeffects": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "audioif": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "audioinstruments": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "cameraif": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "castif": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "displayif": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "h264enc": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "iconkit": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "icons": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "jpegio": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "mdns": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "micropython": {
-      "describe": "9d3de37e67e9"
+      "describe": "254263aef6d1"
     },
     "micropython-lib": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "offheap": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "omnipython": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "omnipython-builds": {
-      "describe": "adf91bd",
+      "describe": "88ed957",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "omnipython-lib": {
       "describe": "e0ce1c74e0f7",
@@ -189,24 +189,24 @@
       "head": "97546833371bd5fa385b9610127b8a2dfc05c753"
     },
     "palettes": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "pdwidgets": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "pngio": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "ppa": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "pygraphics": {
       "describe": "5631a56cd55e",
@@ -214,19 +214,19 @@
       "head": "5631a56cd55eb8ac1e82a14396bd876ad97c889d"
     },
     "svgio": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "tsmux": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "ttfio": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     },
     "ulab": {
       "describe": "15e999747079",
@@ -234,11 +234,11 @@
       "head": "15e999747079205b2415e71a6aa2840b8f85f9dc"
     },
     "usbhost": {
-      "describe": "adf91bd0e2ea",
+      "describe": "88ed95731556",
       "dirty": false,
-      "head": "adf91bd0e2eacec1b3ae1701a12e2297306b7323"
+      "head": "88ed9573155647f34dc5b5637afc5f57b5d80c86"
     }
   },
-  "stamped": "2026-11-22T10:12:10+00:00",
+  "stamped": "2026-11-22T11:12:57+00:00",
   "target": "mp-wasm"
 }
